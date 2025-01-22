@@ -10,6 +10,8 @@ class signuppage extends StatefulWidget {
 class _signuppageState extends State<signuppage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      child: Text('signup_page'),
+    );
   }
 }
