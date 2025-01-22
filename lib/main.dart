@@ -1,3 +1,4 @@
+import 'package:anvaya/bottom%20navbar/bnavbar.dart';
 import 'package:anvaya/constants/app_theme.dart';
 import 'package:anvaya/firebase_options.dart';
 import 'package:anvaya/login/login_page.dart';
@@ -23,7 +24,9 @@ class MyApp extends StatelessWidget {
       title: 'Anvaya',
       theme: AppTheme.lightThemeMode,
       debugShowCheckedModeBanner: false,
-      home:LoginPage(),
+      // home:LoginPage(),
+            home:BottomNavbar(),
+
     );
   }
 }
