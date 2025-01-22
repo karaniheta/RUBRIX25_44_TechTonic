@@ -135,7 +135,7 @@ class _HomeState extends State<Home> {
                           mainAxisSpacing: 10, // Vertical spacing
                           childAspectRatio: 3 / 2, // Aspect ratio of each item
                         ),
-                        itemCount: items.length,
+                        itemCount: 1,
                         itemBuilder: (context, index) {
                           return Card(
                               color:AppColors.nonselected,
