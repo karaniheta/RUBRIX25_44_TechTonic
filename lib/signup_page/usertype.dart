@@ -14,16 +14,18 @@ class Usertype extends StatelessWidget {
 
         children: [
           Padding(padding: EdgeInsets.all(8.0)),
-           SizedBox(height: 80),
+           SizedBox(height: 40),
                       Text('ANVAYA',
                       style: TextStyle(
                         fontFamily: 'interB',
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF69adb2))),
+                        SizedBox(height: 60,),
+                        
                         SizedBox(
                           height: 200, child: Image.asset('assets/applogo.png')),
-                          SizedBox(height: 200,),
+                          SizedBox(height: 150,),
           Padding(padding: EdgeInsets.all(16),
 
           
@@ -38,16 +40,26 @@ class Usertype extends StatelessWidget {
                   minimumSize: Size(double.infinity,50 ),
                   
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0)
+                    borderRadius: BorderRadius.circular(30.0)
                   )
           
                 ),
-                child: Text('SignUp as User',
-                style: TextStyle(
-                  fontFamily: 'interR',
-                  fontSize: 25,
-                  color: AppColors.secondaryColor
-                ),)),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20,0,20,0),
+                  child: Container(
+                    
+                    
+                    child: Center(
+                      child: Text('SignUp as User',
+                      
+                      style: TextStyle(
+                        fontFamily: 'intersB',
+                        fontSize: 22,
+                        color: AppColors.secondaryColor
+                      ),),
+                    ),
+                  ),
+                )),
                 SizedBox(
                   height: 10,
                 ),
@@ -76,16 +88,24 @@ class Usertype extends StatelessWidget {
                   minimumSize: Size(double.infinity,50 ),
                   
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0)
+                    borderRadius: BorderRadius.circular(30.0)
                   )
           
                 ),
-                child: Text('SignUp as FoodBank',
-                style: TextStyle(
-                  fontFamily: 'interR',
-                  fontSize: 25,
-                  color: AppColors.secondaryColor
-                ),)),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20,0,20,0),
+                  child: Container(
+                    // width: 180,
+                    child: Center(
+                      child: Text('SignUp as FoodBank',
+                      style: TextStyle(
+                        fontFamily: 'intersB',
+                        fontSize: 22,
+                        color: AppColors.secondaryColor
+                      ),),
+                    ),
+                  ),
+                )),
           
               ],
             ),),
