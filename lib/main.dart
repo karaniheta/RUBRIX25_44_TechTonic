@@ -1,3 +1,4 @@
+import 'package:anvaya/constants/app_theme.dart';
 import 'package:anvaya/firebase_options.dart';
 import 'package:anvaya/login/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,7 +21,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Anvaya',
-      //theme:
+      theme: AppTheme.lightThemeMode,
+      debugShowCheckedModeBanner: false,
       home:LoginPage(),
     );
   }
