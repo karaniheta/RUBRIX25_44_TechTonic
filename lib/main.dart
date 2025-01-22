@@ -24,8 +24,8 @@ class MyApp extends StatelessWidget {
       title: 'Anvaya',
       theme: AppTheme.lightThemeMode,
       debugShowCheckedModeBanner: false,
-      home:LoginPage(),
-            // home:BottomNavbar(),
+      // home:LoginPage(),
+            home:BottomNavbar(),
 
     );
   }

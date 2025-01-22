@@ -32,6 +32,8 @@ class _NavbarState extends State<BottomNavbar> {
         Text('Rishi Mehta'),
       ],
     ),
+    Text('Your Profile'),
+
   
   ];
 
@@ -66,10 +68,10 @@ class _NavbarState extends State<BottomNavbar> {
                 color: AppColors.titletext,
                 )
               ),
-              SizedBox(width: 20,)
+              SizedBox(width: 20,),
          
-            // Text(appBarTitles[_selectedIndex],
-           ,
+            appBarTitles[_selectedIndex],
+           
           ],
         ),
         actions: [
