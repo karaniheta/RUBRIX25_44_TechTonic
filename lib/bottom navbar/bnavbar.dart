@@ -5,25 +5,17 @@ import 'package:flutter/material.dart';
 // import 'package:provider/provider.dart';
 import 'package:super_icons/super_icons.dart';
 
-
 class BottomNavbar extends StatefulWidget {
   const BottomNavbar({super.key});
-
 
   @override
   State<BottomNavbar> createState() => _NavbarState();
 }
 
-
 class _NavbarState extends State<BottomNavbar> {
   int _selectedIndex = 0;
 
-
-  final List<Widget> pages = [
-    Home(),
-    Profile()
-  ];
-
+  final List<Widget> pages = [Home(), Profile()];
 
   final List<Widget> appBarTitles = [
     Column(
@@ -33,10 +25,7 @@ class _NavbarState extends State<BottomNavbar> {
       ],
     ),
     Text('Your Profile'),
-
-  
   ];
-
 
   void _onItemTapped(int index) {
     setState(() {
@@ -44,53 +33,23 @@ class _NavbarState extends State<BottomNavbar> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     // void handleThemeChange(bool isDarkMode) {
     //   Provider.of<ThemeNotifier>(context, listen: false)
     //       .toggleTheme(isDarkMode);
     // }
 
-
     return Scaffold(
       backgroundColor: AppColors.secondaryColor,
       appBar: AppBar(
-        backgroundColor: AppColors.secondaryColor,
-        title: Row(
-         
-          children: [
-            Container(
-              height: 40,
-              child: Icon(
-                Icons.wb_sunny_outlined,
-                color: AppColors.titletext,
-                )
-              ),
-              SizedBox(width: 20,),
-         
-            appBarTitles[_selectedIndex],
-           
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.search,
-              color: AppColors.selectedtile,
-            ),
-            onPressed: () {},
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.notifications_outlined,
-              color: AppColors.selectedtile,
-            ),
-            onPressed: () {},
-          ),
-        ],
-      ),
+          centerTitle: true,
+          backgroundColor: AppColors.secondaryColor,
+          title: Text(
+            'A  N  V  A  Y  A',
+            style:
+                TextStyle(fontFamily: 'interB', color: AppColors.primaryColor),
+          )),
       body: IndexedStack(
         index: _selectedIndex,
         children: pages,
@@ -98,7 +57,7 @@ class _NavbarState extends State<BottomNavbar> {
       // drawer: Drawerclass(
       //   // onThemeChange: handleThemeChange,
       // ),
-      bottomNavigationBar: BottomNavigationBar(   
+      bottomNavigationBar: BottomNavigationBar(
         selectedFontSize: 12,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
