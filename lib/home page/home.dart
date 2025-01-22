@@ -22,10 +22,7 @@ class _HomeState extends State<Home> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(40),
                 color: AppColors.titletext,      
-                image: DecorationImage(
-                  image: AssetImage('assets/images/cover.jpg'),
-                  fit: BoxFit.cover,
-                ),
+                
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

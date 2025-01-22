@@ -9,23 +9,22 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:super_icons/super_icons.dart';
 
-
-class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+class SignorgPage extends StatefulWidget {
+  const SignorgPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<SignorgPage> createState() => _SignorgPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _SignorgPageState extends State<SignorgPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
   bool isLoading = false;
-
   Future<void> signinwithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -45,9 +44,7 @@ class _SignupPageState extends State<SignupPage> {
       // Navigate to Homepage after successful login
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => BottomNavbar()
-        ),
+        MaterialPageRoute(builder: (context) => BottomNavbar()),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -69,9 +66,7 @@ class _SignupPageState extends State<SignupPage> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => BottomNavbar()
-        ),
+        MaterialPageRoute(builder: (context) => BottomNavbar()),
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -104,20 +99,21 @@ class _SignupPageState extends State<SignupPage> {
                     children: [
                       const SizedBox(height: 40),
                       Text('ANVAYA',
-                      style: TextStyle(
-                        fontFamily: 'interB',
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF69adb2))),
+                          style: TextStyle(
+                              fontFamily: 'interB',
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF69adb2))),
                       const SizedBox(height: 60),
                       SizedBox(
-                          height: 200, child: Image.asset('assets/applogo.png')),
+                          height: 200,
+                          child: Image.asset('assets/applogo.png')),
                       SizedBox(height: 20),
                       TextFormField(
                         controller: _nameController,
                         decoration: const InputDecoration(
-                          prefixIcon: Icon(SuperIcons.ii_man),
-                          labelText: 'Name'),
+                            prefixIcon: Icon(SuperIcons.ii_man),
+                            labelText: 'Name'),
                         validator: (value) => value == null || value.isEmpty
                             ? 'Enter your name'
                             : null,
@@ -126,8 +122,8 @@ class _SignupPageState extends State<SignupPage> {
                       TextFormField(
                         controller: _emailController,
                         decoration: const InputDecoration(
-                          prefixIcon: Icon(SuperIcons.ii_mail),
-                          labelText: 'Email'),
+                            prefixIcon: Icon(SuperIcons.ii_mail),
+                            labelText: 'Email'),
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) =>
                             value == null || !value.contains('@')
@@ -137,9 +133,9 @@ class _SignupPageState extends State<SignupPage> {
                       SizedBox(height: 10),
                       TextFormField(
                         controller: _passwordController,
-                        decoration:
-                            const InputDecoration(
-                              prefixIcon: Icon(SuperIcons.ii_lock_closed),                             labelText: 'Password'),
+                        decoration: const InputDecoration(
+                            prefixIcon: Icon(SuperIcons.ii_lock_closed),
+                            labelText: 'Password'),
                         obscureText: true,
                         validator: (value) => value == null || value.length < 6
                             ? 'Password must be at least 6 characters'
@@ -148,10 +144,9 @@ class _SignupPageState extends State<SignupPage> {
                       SizedBox(height: 10),
                       TextFormField(
                         controller: _dobController,
-                        decoration:
-                            const InputDecoration(
-                              prefixIcon: Icon(SuperIcons.bs_calendar),
-                              labelText: 'Date of Birth'),
+                        decoration: const InputDecoration(
+                            prefixIcon: Icon(SuperIcons.bs_calendar),
+                            labelText: 'Date of Birth'),
                         readOnly: true,
                         onTap: () async {
                           DateTime? pickedDate = await showDatePicker(
@@ -173,20 +168,42 @@ class _SignupPageState extends State<SignupPage> {
                       TextFormField(
                         controller: _phoneController,
                         decoration: const InputDecoration(
-                          prefixIcon: Icon(SuperIcons.ii_call),
-                          labelText: 'Phone'),
+                            prefixIcon: Icon(SuperIcons.ii_call),
+                            labelText: 'Phone'),
                         keyboardType: TextInputType.phone,
-                         validator: (value) {
-    final phoneRegExp = RegExp(r'^\+?[1-9]\d{1,14}$'); // E.164 format
-    if (value == null || value.isEmpty) {
-      return 'Enter a valid phone number';
-    } else if (!phoneRegExp.hasMatch(value)) {
-      return 'Enter a valid phone number';
-    }
-    return null;
-  },
-),
-                      
+                        validator: (value) {
+                          final phoneRegExp =
+                              RegExp(r'^\+?[1-9]\d{1,14}$'); // E.164 format
+                          if (value == null || value.isEmpty) {
+                            return 'Enter a valid phone number';
+                          } else if (!phoneRegExp.hasMatch(value)) {
+                            return 'Enter a valid phone number';
+                          }
+                          return null;
+                        },
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        controller: _addressController,
+                        decoration: const InputDecoration(
+                            prefixIcon: Icon(SuperIcons.ii_map),
+                            labelText: 'Address'),
+                        keyboardType: TextInputType.streetAddress,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                    return 'Please enter your address.';
+                  }
+                  if (value.length < 10) {
+                    return 'Address should be at least 10 characters long.';
+                  }
+                  if (!RegExp(r'^[a-zA-Z0-9\s,.-]+$').hasMatch(value)) {
+                    return 'Address contains invalid characters.';
+                  }
+                  return null;
+                },
+                      ),
                       const SizedBox(height: 10),
                       InkWell(
                         onTap: () {
@@ -205,13 +222,13 @@ class _SignupPageState extends State<SignupPage> {
                       const SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: _signUp,
-                        child: const Text('Sign Up',
-                        style: TextStyle(
-                          color: Color(0xFFf1f5f5)
-                        ),
+                        child: const Text(
+                          'Sign Up',
+                          style: TextStyle(color: Color(0xFFf1f5f5)),
                         ),
                         style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all(Color(0xFF69adb2))                        ),
+                            backgroundColor:
+                                WidgetStateProperty.all(Color(0xFF69adb2))),
                       ),
                       const SizedBox(height: 10),
                       Text('OR'),
@@ -239,7 +256,6 @@ class _SignupPageState extends State<SignupPage> {
                                   child: Image.asset('assets/google icon.png')),
                             ),
                             SizedBox(width: 20),
-                            
                           ])
                     ],
                   ),

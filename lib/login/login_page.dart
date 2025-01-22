@@ -1,5 +1,6 @@
 import 'package:anvaya/bottom%20navbar/bnavbar.dart';
 import 'package:anvaya/home%20page/home.dart';
+import 'package:anvaya/signup_page/usertype.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -7,7 +8,7 @@ import 'package:super_icons/super_icons.dart';
 
 // import 'package:anvaya/constants/app_theme.dart';
 // import 'package:anvaya/constants/colors.dart';
-import 'package:anvaya/hume.dart';
+
 import 'package:anvaya/signup_page/signup_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -142,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const SignupPage(),
+                              builder: (context) => const Usertype(),
                             ),
                           );
                         },
