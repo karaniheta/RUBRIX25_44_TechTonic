@@ -1,137 +1,8 @@
+import 'package:anvaya/constants/colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-// class Transactions extends StatefulWidget {
-//   const Transactions({super.key});
-
-//   @override
-//   State<Transactions> createState() => _TransactionsState();
-// }
-
-// class _TransactionsState extends State<Transactions> {
-//   User? user = FirebaseAuth.instance.currentUser;
-
-//   @override
-
-//   @override
-//   Widget build(BuildContext context) {
-    
-//     return Scaffold(
-//       appBar: AppBar(
-//         // title: Text('Transactions Page'),
-//       ),
-//       body: SingleChildScrollView(
-//         child: Container(
-//                       // height: 200,
-//                       width: double.infinity, // Full width of the screen
-//                       padding: EdgeInsets.all(10),
-//                       child: Expanded(
-//                         child: StreamBuilder<QuerySnapshot>(
-//                           stream: FirebaseFirestore.instance
-//                               .collection('Transactions')
-//                               .snapshots(),
-//                           builder: (context, snapshot) {
-//                             if (snapshot.connectionState ==
-//                                 ConnectionState.waiting) {
-//                               return Center(child: CircularProgressIndicator());
-//                             }
-//                             if (snapshot.hasData && snapshot.data!.docs.isEmpty) {
-//                               return Center(
-//                                   child: Text('Oops! Seems like there are no donations at the moment :('));
-//                             }
-        
-//                             if (snapshot.hasError) {
-//                               return Center(
-//                                   child: Text('Error: ${snapshot.error}'));
-//                             }
-        
-//                             final transactions = snapshot.data!.docs;
-        
-//                             return GridView.builder(
-//                               shrinkWrap: true,
-//                               physics: NeverScrollableScrollPhysics(),
-//                               gridDelegate:
-//                                   SliverGridDelegateWithFixedCrossAxisCount(
-//                                 crossAxisCount: 1, // Number of columns
-//                                 crossAxisSpacing: 10, // Horizontal spacing
-//                                 mainAxisSpacing: 10, // Vertical spacing
-//                                 childAspectRatio:
-//                                     6 / 5, // Aspect ratio of each item
-//                               ),
-//                               itemCount: transactions.length,
-//                               itemBuilder: (context, index) {
-//                                 final transaction = transactions[index].data()
-//                                     as Map<String, dynamic>;
-//                                     if((transaction['receiverId'] == user!.uid)||(transaction['donorId'] == user!.uid)){
-//                                 return FutureBuilder<Widget>(
-//                                   future: 
-//                                   Transactcard(context, transaction, user),
-//                                   builder: (context, snapshot) {
-//                                     if (snapshot.connectionState == ConnectionState.waiting) {
-//                                       return Center(child: CircularProgressIndicator());
-//                                     } else if (snapshot.hasError) {
-//                                       return Center(child: Text('Error: ${snapshot.error}'));
-//                                     } else {
-//                                       return snapshot.data!;
-//                                     }
-//                                   },
-//                                 );
-//                                 };
-//                               },
-//                             );
-        
-//                             // ListView.builder(
-//                             //   physics: NeverScrollableScrollPhysics(),
-//                             //   shrinkWrap: true,
-//                             //   itemCount: products.length,
-//                             //   itemBuilder: (context, index) {
-//                             //     final product =
-//                             //         products[index].data() as Map<String, dynamic>;
-        
-//                             //     return
-//                             //     Productcard(product);
-//                             //   },
-//                             // );
-//                           },
-//                         ),
-//                       ),
-        
-//                     ),
-//       )
-
-
-//       );
-//     // );
-//   }
-// }
-
-// Future<Widget> Transactcard(BuildContext context, Map<String, dynamic> transaction, User? user) async {
-
-//   if (transaction['receiverId'] == user!.uid) {
-//     return Card(
-//       child: Column(
-//         children: [
-//           Text('Received'),
-//           Text('${transaction['productName']}'),
-//           Text('Date: ${transaction['time']}'),
-//         ],
-//       ),
-//     );
-//   }
-// else{
-//   return Card(
-//     child: Column(
-//       children: [
-//           Text('Donated'),
-//           Text('${transaction['productName']}'),
-//           Text('Date: ${transaction['time']}'),
-
-//       ],
-//     ),
-//   );}
-// }
 
 class Transactions extends StatefulWidget {
   const Transactions({super.key});
@@ -146,7 +17,10 @@ class _TransactionsState extends State<Transactions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("Transactions"),
+        backgroundColor: AppColors.secondaryColor,
+      ),
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
@@ -176,29 +50,15 @@ class _TransactionsState extends State<Transactions> {
                 return Center(child: Text('No transactions for this user.'));
               }
 
-              return GridView.builder(
+              return ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1, // Single column
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: 3/1,
-                ),
                 itemCount: userTransactions.length,
                 itemBuilder: (context, index) {
                   final transaction = userTransactions[index].data() as Map<String, dynamic>;
-                  return FutureBuilder<Widget>(
-                    future: Transactcard(context, transaction, user),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        return Center(child: Text('Error: ${snapshot.error}'));
-                      } else {
-                        return snapshot.data!;
-                      }
-                    },
+                  return TransactionCard(
+                    transaction: transaction,
+                    user: user,
                   );
                 },
               );
@@ -210,37 +70,75 @@ class _TransactionsState extends State<Transactions> {
   }
 }
 
-Future<Widget> Transactcard(BuildContext context, Map<String, dynamic> transaction, User? user) async {
+class TransactionCard extends StatelessWidget {
+  final Map<String, dynamic> transaction;
+  final User? user;
 
-  final formattedDate = DateFormat('dd MMM yyyy, hh:mm a')
-      .format((transaction['time'] as Timestamp).toDate());
-  if (transaction['receiverId'] == user!.uid) {
+  const TransactionCard({required this.transaction, required this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    final formattedDate = DateFormat('dd MMM yyyy, hh:mm a')
+        .format((transaction['time'] as Timestamp).toDate());
+
+    final isReceiver = transaction['receiverId'] == user!.uid;
+
     return Card(
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
       child: Container(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: isReceiver
+                ? [Colors.green.shade100, Colors.green.shade300]
+                : [Colors.blue.shade100, Colors.blue.shade300],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(15),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Received',
-            style: TextStyle(
-              fontSize: 26,
-              color: Colors.green,
-              fontWeight: FontWeight.bold,
-            ),),
-            Text('${transaction['productName']}'),
-            Text('Date: ${formattedDate}'),
+            Text(
+              isReceiver ? 'Received' : 'Donated',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: isReceiver ? Colors.green.shade800 : Colors.blue.shade800,
+              ),
+            ),
+            SizedBox(height: 8),
+            Row(
+              children: [
+                Icon(Icons.shopping_bag, color: Colors.black54),
+                SizedBox(width: 5),
+                Expanded(
+                  child: Text(
+                    transaction['productName'] ?? 'Unknown Product',
+                    style: TextStyle(fontSize: 16, color: Colors.black87),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 5),
+            Row(
+              children: [
+                Icon(Icons.calendar_today, color: Colors.black54),
+                SizedBox(width: 5),
+                Text(
+                  'Date: $formattedDate',
+                  style: TextStyle(fontSize: 14, color: Colors.black54),
+                ),
+              ],
+            ),
+           
           ],
         ),
-      ),
-    );
-  } else {
-    return Card(
-      child: Column(
-        children: [
-          Text('Donated'),
-          Text('${transaction['productName']}'),
-          Text('Date: ${formattedDate}'),
-        ],
       ),
     );
   }
