@@ -15,81 +15,81 @@ class _FoodBankVolunteeringViewState extends State<FoodBankVolunteeringView> {
   final TextEditingController _vacanciesController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  @override
-  Widget build(BuildContext context) {
-    final foodBankId = FirebaseAuth.instance.currentUser!.uid;
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Text(
-                'My Volunteering dashboard',
-                style: TextStyle(
-                    fontFamily: 'interB',
-                    color: AppColors.titletext,
-                    fontSize: 20),
-              ),
-              Spacer(),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.titletext,   
-                    borderRadius: BorderRadius.circular(40)
-                  ),
-                  child: IconButton(
-                    onPressed: () => _showAddVacancyDialog(),
-                    icon: Icon(Icons.add, color: AppColors.navbarcolorbg,),
-                  ),
+@override
+Widget build(BuildContext context) {
+  final foodBankId = FirebaseAuth.instance.currentUser!.uid;
+
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+    child: Column(
+      children: [
+        Row(
+          children: [
+            Text(
+              'My Volunteering dashboard',
+              style: TextStyle(
+                  fontFamily: 'interB',
+                  color: AppColors.titletext,
+                  fontSize: 20),
+            ),
+            Spacer(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.titletext,
+                  borderRadius: BorderRadius.circular(40),
+                ),
+                child: IconButton(
+                  onPressed: () => _showAddVacancyDialog(),
+                  icon: Icon(Icons.add, color: AppColors.navbarcolorbg),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
+        ),
+        SizedBox(height: 10),
+        // Wrapping the StreamBuilder with a SingleChildScrollView
+        // and using Flexible to manage the ListView's size.
+        Expanded(
+          child: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('FoodBanks')
+                .doc(foodBankId)
+                .collection('volunteeringOpportunities')
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
 
-          SizedBox(height: 10,),
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('FoodBanks')
-                  .doc(foodBankId)
-                  .collection('volunteeringOpportunities')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
 
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                }
+              final opportunities = snapshot.data!.docs;
 
-                final opportunities = snapshot.data!.docs;
+              return ListView.builder(
+                itemCount: opportunities.length,
+                itemBuilder: (context, index) {
+                  final opportunity =
+                      opportunities[index].data() as Map<String, dynamic>;
 
-                return ListView.builder(
-                  itemCount: opportunities.length,
-                  itemBuilder: (context, index) {
-                    final opportunity =
-                        opportunities[index].data() as Map<String, dynamic>;
-
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Card(
-                          margin: EdgeInsets.all(8.0),
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: AppColors.titletext,
-                                width: 1
-                              ),
-                                color: AppColors.primaryColor,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Stack(
-                              clipBehavior: Clip.none,
-                              children: [Column(
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Card(
+                        margin: EdgeInsets.all(8.0),
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              
+                              color: AppColors.primaryColor,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
@@ -104,7 +104,9 @@ class _FoodBankVolunteeringViewState extends State<FoodBankVolunteeringView> {
                                       Spacer(),
                                       IconButton(
                                         onPressed:
-                                            opportunities[index].reference.delete,
+                                            opportunities[index]
+                                                .reference
+                                                .delete,
                                         icon: Icon(Icons.delete),
                                         color: AppColors.titletext,
                                       )
@@ -123,42 +125,42 @@ class _FoodBankVolunteeringViewState extends State<FoodBankVolunteeringView> {
                                   SizedBox(
                                     height: 20,
                                   ),
-                                  
                                 ],
                               ),
                               Positioned(
-                                    bottom: -20,
-                                    right: 10,
-                                    child: Container(
-                                      padding: EdgeInsets.fromLTRB(7, 5, 7, 5),
-                                      decoration: BoxDecoration(
-                                          color: AppColors.selectedtile,
-                                          border: Border.all(
-                                            width: 4,
-                                              color: AppColors.primaryColor),
-                                          borderRadius: BorderRadius.circular(20)),
-                                      child: Text(
-                                        'Vacancies : ${opportunity['vacancies'].toString()}',
-                                        style: TextStyle(
-                                            fontFamily: 'interR',
-                                            color: AppColors.navbarcolorbg,
-                                            fontSize: 14),
-                                      ),
-                                    ),
+                                bottom: -20,
+                                right: 10,
+                                child: Container(
+                                  padding: EdgeInsets.fromLTRB(7, 5, 7, 5),
+                                  decoration: BoxDecoration(
+                                      color: AppColors.selectedtile,
+                                      border: Border.all(
+                                        width: 4,
+                                        color: AppColors.primaryColor),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Text(
+                                    'Vacancies : ${opportunity['vacancies'].toString()}',
+                                    style: TextStyle(
+                                        fontFamily: 'interR',
+                                        color: AppColors.navbarcolorbg,
+                                        fontSize: 14),
                                   ),
-                              ]
-                            ),
-                          )),
-                    );
-                  },
-                );
-              },
-            ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
+                  );
+                },
+              );
+            },
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
+
 
   void _showAddVacancyDialog() {
     showDialog(

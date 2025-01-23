@@ -66,7 +66,6 @@ class _UservolunteeringviewState extends State<Uservolunteeringview> {
                 child: Container(
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.titletext, width: 1),
                     color: AppColors.primaryColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
