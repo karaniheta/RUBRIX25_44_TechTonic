@@ -1,5 +1,7 @@
 import 'package:anvaya/constants/colors.dart';
 import 'package:anvaya/donation%20page/donation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:super_icons/super_icons.dart';
 
@@ -14,6 +16,8 @@ class _HomeState extends State<Home> {
   final List<String> items = List.generate(20, (index) => 'Item ${index + 1}');
   @override
   Widget build(BuildContext context) {
+        final ownerId = FirebaseAuth.instance.currentUser!.uid;
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
@@ -98,22 +102,65 @@ class _HomeState extends State<Home> {
           ],
             ),
             Container(
+              // height: 200,
           width: double.infinity, // Full width of the screen
           padding: EdgeInsets.all(10),
-          child: GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 1, // Number of columns
-              crossAxisSpacing: 10, // Horizontal spacing
-              mainAxisSpacing: 10, // Vertical spacing
-              childAspectRatio: 3 / 2, // Aspect ratio of each item
-            ),
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return Productcard();
-            },
-          ),
+          child:              
+           Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('Products')
+                      .where('owner_id', isEqualTo: ownerId)
+                      // .orderBy('time_created', descending: true)
+                      // .doc(foodBankId)
+                      // .collection('volunteeringOpportunities')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasData && snapshot.data!.docs.isEmpty) {
+                      return Center(
+                          child: Text('You dont have any donations yet'));
+                    }
+
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    }
+
+                    final products = snapshot.data!.docs;
+
+                    return ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        final product =
+                            products[index].data() as Map<String, dynamic>;
+
+                        return 
+                        Productcard(product);    
+                      },
+                    );
+                  },
+                ),
+              ),
+
+          
+          // GridView.builder(
+          //   shrinkWrap: true,
+          //   physics: NeverScrollableScrollPhysics(),
+          //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          //     crossAxisCount: 1, // Number of columns
+          //     crossAxisSpacing: 10, // Horizontal spacing
+          //     mainAxisSpacing: 10, // Vertical spacing
+          //     childAspectRatio: 3 / 2, // Aspect ratio of each item
+          //   ),
+          //   itemCount: 3,
+          //   itemBuilder: (context, index) {
+          //     return Productcard();
+          //   },
+          // ),
             )
           ],
         ),
@@ -167,7 +214,7 @@ class _HomeState extends State<Home> {
 //     );
 //  }
 
-Widget Productcard() {
+Widget Productcard( product) {
   return Card(
     
     
@@ -176,65 +223,74 @@ Widget Productcard() {
     ),
     
     color: const Color.fromARGB(255, 255, 255, 255),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    child: Container(
+      height: 270,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        
+        children:[ 
+          Expanded(
+            flex: 2,
+            child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              image: DecorationImage(
+                image: AssetImage(product['image']),
+                fit: BoxFit.cover,
+              ),
+            ),
+                ),
+          ),
       
-      children:[ 
         Expanded(
-          flex: 2,
+          flex: 1,
           child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(
-              image: AssetImage('assets/pizza.png'),
-              fit: BoxFit.cover,
+            padding: EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(SuperIcons.bx_food_tag, color: product['isveg']? Colors.green: Colors.red),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      product['name'],
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),)
+                    // ),
+                    // TextButton(
+                    //   onPressed: (){}, 
+                    //   child: Text('Recieve', 
+                    //   style: TextStyle(color: AppColors.text),
+                // SizedBox(height: 5),
+                // Text(
+                //   'Product Description',
+                //   style: TextStyle(
+                //     fontSize: 10,
+                //   ),
+                // ),
+                // SizedBox(height: 5),
+                                ],
+                ),
+                                Text(
+                  'Expires on: ${product['exp_date']}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    // fontWeight: FontWeight.bold,
+                    color: AppColors.text,
+                  ),
+                ),
+
+      
+              ],
+
             ),
           ),
-              ),
         ),
-    
-      Expanded(
-        flex: 1,
-        child: Container(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(SuperIcons.bx_food_tag, color: Colors.green),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Product Name',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-              // SizedBox(height: 5),
-              // Text(
-              //   'Product Description',
-              //   style: TextStyle(
-              //     fontSize: 10,
-              //   ),
-              // ),
-              // SizedBox(height: 5),
-              Text(
-                'Price: Rs.100',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.text,
-                ),
-              ),
-                              ],
-              ),
-
-            ],
-          ),
-        ),
+        ]
       ),
-      ]
     ),
   );
 }
