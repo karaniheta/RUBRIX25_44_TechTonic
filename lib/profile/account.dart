@@ -102,9 +102,9 @@ class _AccountState extends State<Account> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('User Name: ${data['user_name']}', style: _textStyle()),
-          Text('Email: ${data['user_emailId']}', style: _textStyle()),
-          Text('Account: User', style: _textStyle()),
+          Text('User Name: ${data['user_name']}',),
+          Text('Email: ${data['user_emailId']}',),
+          Text('Account: User', ),
         ],
       ),
     );
@@ -115,20 +115,13 @@ class _AccountState extends State<Account> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Food Bank Name: ${data['foodbank_name']}', style: _textStyle()),
-          Text('Contact: ${data['foodbank_phoneNumber']}', style: _textStyle()),
-          Text('Address: ${data['foodbank_address']}', style: _textStyle()),
-          Text('Role: Food Bank', style: _textStyle()),
+          Text('Food Bank Name: ${data['foodbank_name']}',  ),
+          Text('Contact: ${data['foodbank_phoneNumber']}',  ),
+          Text('Address: ${data['foodbank_address']}', ),
+          Text('Role: Food Bank',),
         ],
       ),
     );
   }
 
-  TextStyle _textStyle() {
-    return TextStyle(
-      fontSize: 18,
-      fontWeight: FontWeight.bold,
-      color: AppColors.primaryColor,
-    );
-  }
 }
