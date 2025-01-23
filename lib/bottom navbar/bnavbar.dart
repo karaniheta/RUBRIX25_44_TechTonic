@@ -1,5 +1,6 @@
 import 'package:anvaya/chatbot%20page/chatbotpage.dart';
-import 'package:anvaya/community/communitypage.dart';
+import 'package:anvaya/community/leader_page.dart';
+
 import 'package:anvaya/constants/colors.dart';
 import 'package:anvaya/home%20page/home.dart';
 import 'package:anvaya/profile/profile.dart';
@@ -17,7 +18,7 @@ class BottomNavbar extends StatefulWidget {
 class _NavbarState extends State<BottomNavbar> {
   int _selectedIndex = 0;
 
-  final List<Widget> pages = [Home(),Volunteerpage(), Chatbotpage(),Communitypage(), Profile()];
+  final List<Widget> pages = [Home(),Volunteerpage(), Chatbotpage(),LeaderboardPage(), Profile()];
 
 
   void _onItemTapped(int index) {
