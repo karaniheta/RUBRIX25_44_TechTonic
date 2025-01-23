@@ -1,3 +1,4 @@
+import 'package:anvaya/Guidelines/guidelinespage.dart';
 import 'package:anvaya/chatbot%20page/chatbotpage.dart';
 import 'package:anvaya/community/leader_page.dart';
 import 'package:anvaya/constants/colors.dart';
@@ -34,6 +35,9 @@ class _NavbarState extends State<BottomNavbar> {
       appBar: AppBar(
           centerTitle: true,
           backgroundColor: AppColors.secondaryColor,
+          leading: IconButton( 
+          onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>Guidelinespage())) ;}, icon: Icon(Icons.info_outline,
+          color: AppColors.titletext,),),
           title: Text(
             'A  N  V  A  Y  A',
             style:
