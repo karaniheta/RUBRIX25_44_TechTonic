@@ -1,4 +1,5 @@
 import 'package:anvaya/constants/colors.dart';
+import 'package:anvaya/donation%20page/donation.dart';
 import 'package:flutter/material.dart';
 import 'package:super_icons/super_icons.dart';
 
@@ -19,145 +20,106 @@ class _HomeState extends State<Home> {
         child: Column(children: [
           Container(
             height: 200,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40),
-              color: AppColors.titletext,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(40),
+          color: AppColors.titletext,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+          'Welcome to Anvaya',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Welcome to Anvaya',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Your one stop solution for all your needs',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
-              ],
+            SizedBox(height: 10),
+            Text(
+          'Your one stop solution for all your needs',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+          ),
             ),
+          ],
+        ),
           ),
           SizedBox(height: 20),
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Categories',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+        padding: const EdgeInsets.all(8.0),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Donation()));
+            
+          },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+             Container(
+              height: 40,
+              width: 300,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(40),
+                color: AppColors.primaryColor,
+              ),
+                child: Center(
+                  child: Text(
+                    'Donate',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-
-                // Text(
-                //   'View All',
-                //   style: TextStyle(
-                //     color: Colors.blue,
-                //     fontSize: 16,
-                //   ),
-                // ),
-              ],
-            ),
+              ),
+          ],
+        ),
+          ),
           ),
           SizedBox(height: 10),
-          Container(
-            height: 100,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                // CategoryCard(
-                //   title: 'Groceries',
-                //   icon: Icons.shopping_cart,
-                // ),
-                // CategoryCard(
-                //   title: 'Electronics',
-                //   icon: Icons.phone_android,
-                // ),
-                // CategoryCard(
-                //   title: 'Fashion',
-                //   icon: Icons.shopping_bag,
-                // ),
-                // CategoryCard(
-                //   title: 'Home Decor',
-                //   icon: Icons.home,
-                // ),
-                // CategoryCard(
-                //   title: 'Beauty',
-                //   icon: Icons.face,
-                // ),
-              ],
-            ),
-          ),
-          SizedBox(height: 20),
           Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        'Popular Products',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-
-                      // Text(
-                      //   'View All',
-                      //   style: TextStyle(
-                      //     color: Colors.blue,
-                      //     fontSize: 16,
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                  Container(
-                    height: 400, // Fixed height for the Container
-                    width: double.infinity, // Full width of the screen
-                    // color: Colors.grey[200], // Background color
-                    padding: EdgeInsets.all(10),
-                    child: GridView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          
-                          crossAxisCount: 1, // Number of columns
-                          crossAxisSpacing: 10, // Horizontal spacing
-                          mainAxisSpacing: 10, // Vertical spacing
-                          childAspectRatio: 3 / 2, // Aspect ratio of each item
-                        ),
-                        itemCount: 1,
-                        itemBuilder: (context, index) {
-                          return Productcard();
-                          // Card(
-                          //     color:AppColors.nonselected,
-                          //     elevation: 4,
-                          //     child: Column(
-                          //       crossAxisAlignment: CrossAxisAlignment.center,
-                          //       mainAxisAlignment: MainAxisAlignment.end,
-                          //       children: [
-                          //         Text('1')
-                          //       ],
-                          //     ));
-                        }),
-                  )
-                ],
-              ))
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              'Popular Products',
+              style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+            ),
+            Container(
+          width: double.infinity, // Full width of the screen
+          padding: EdgeInsets.all(10),
+          child: GridView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 1, // Number of columns
+              crossAxisSpacing: 10, // Horizontal spacing
+              mainAxisSpacing: 10, // Vertical spacing
+              childAspectRatio: 3 / 2, // Aspect ratio of each item
+            ),
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              return Productcard();
+            },
+          ),
+            )
+          ],
+        ),
+          )
         ]),
-      ),
-    );
+      ));
   }
 }
 
