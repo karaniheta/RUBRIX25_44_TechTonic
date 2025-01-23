@@ -10,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:super_icons/super_icons.dart';
 
-
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
 
@@ -46,9 +45,7 @@ class _SignupPageState extends State<SignupPage> {
       // Navigate to Homepage after successful login
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => BottomNavbar()
-        ),
+        MaterialPageRoute(builder: (context) => BottomNavbar()),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -57,44 +54,18 @@ class _SignupPageState extends State<SignupPage> {
     }
   }
 
-  void _signUp() async {
-    if (!_formKey.currentState!.validate()) return;
+void _signUp() async {
+  if (!_formKey.currentState!.validate()) return;
 
-    setState(() => isLoading = true);
+  setState(() => isLoading = true);
 
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => BottomNavbar()
-        ),
-      );
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Signup successful'),
-          backgroundColor: Color(0xFF1E88E5),
-        ),
-      );
-    } catch (e) {
-      setState(() => isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text('Signup failed: $e'),
-            backgroundColor: Color(0xFF1E88E5)),
-      );
-    }
-  }
-  Future<void> signUp() async {
   try {
-    // Create user with email and password
+    // Attempt to create a new user
     UserCredential userCredential = await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: _emailController.text.trim(), password: _passwordController.text.trim());
+        .createUserWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
 
     // Get user UID
     String uid = userCredential.user!.uid;
@@ -104,17 +75,54 @@ class _SignupPageState extends State<SignupPage> {
       'user_name': _nameController.text.trim(),
       'user_emailId': _emailController.text.trim(),
       'dob': _dobController.text.trim(),
-      'user_phoneNumber':_phoneController.text.trim(),
-      'uid':uid,
-      'role':'User',
-      'points':0,
+      'user_phoneNumber': _phoneController.text.trim(),
+      'uid': uid,
+      'role': 'User',
+      'points': 0,
     });
 
-    print('User registered and data saved!');
+    // Navigate to homepage
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => BottomNavbar()),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Signup successful'),
+        backgroundColor: Color(0xFF1E88E5),
+      ),
+    );
+  } on FirebaseAuthException catch (e) {
+    // Handle specific FirebaseAuth errors
+    if (e.code == 'email-already-in-use') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('This email is already in use. Please log in.'),
+          backgroundColor: Color(0xFFE53935),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Signup failed: ${e.message}'),
+          backgroundColor: const Color(0xFFE53935),
+        ),
+      );
+    }
   } catch (e) {
-    print('Error: $e');
+    // Handle other errors
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('An unexpected error occurred: $e'),
+        backgroundColor: const Color(0xFFE53935),
+      ),
+    );
+  } finally {
+    setState(() => isLoading = false);
   }
 }
+
 
   @override
   Widget build(BuildContext context) {
@@ -130,20 +138,21 @@ class _SignupPageState extends State<SignupPage> {
                     children: [
                       const SizedBox(height: 40),
                       Text('ANVAYA',
-                      style: TextStyle(
-                        fontFamily: 'interB',
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF69adb2))),
+                          style: TextStyle(
+                              fontFamily: 'interB',
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF69adb2))),
                       const SizedBox(height: 60),
                       SizedBox(
-                          height: 200, child: Image.asset('assets/applogo.png')),
+                          height: 200,
+                          child: Image.asset('assets/applogo.png')),
                       SizedBox(height: 20),
                       TextFormField(
                         controller: _nameController,
                         decoration: const InputDecoration(
-                          prefixIcon: Icon(SuperIcons.ii_man),
-                          labelText: 'Name'),
+                            prefixIcon: Icon(SuperIcons.ii_man),
+                            labelText: 'Name'),
                         validator: (value) => value == null || value.isEmpty
                             ? 'Enter your name'
                             : null,
@@ -152,8 +161,8 @@ class _SignupPageState extends State<SignupPage> {
                       TextFormField(
                         controller: _emailController,
                         decoration: const InputDecoration(
-                          prefixIcon: Icon(SuperIcons.ii_mail),
-                          labelText: 'Email'),
+                            prefixIcon: Icon(SuperIcons.ii_mail),
+                            labelText: 'Email'),
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) =>
                             value == null || !value.contains('@')
@@ -163,9 +172,9 @@ class _SignupPageState extends State<SignupPage> {
                       SizedBox(height: 10),
                       TextFormField(
                         controller: _passwordController,
-                        decoration:
-                            const InputDecoration(
-                              prefixIcon: Icon(SuperIcons.ii_lock_closed),                             labelText: 'Password'),
+                        decoration: const InputDecoration(
+                            prefixIcon: Icon(SuperIcons.ii_lock_closed),
+                            labelText: 'Password'),
                         obscureText: true,
                         validator: (value) => value == null || value.length < 6
                             ? 'Password must be at least 6 characters'
@@ -174,10 +183,9 @@ class _SignupPageState extends State<SignupPage> {
                       SizedBox(height: 10),
                       TextFormField(
                         controller: _dobController,
-                        decoration:
-                            const InputDecoration(
-                              prefixIcon: Icon(SuperIcons.bs_calendar),
-                              labelText: 'Date of Birth'),
+                        decoration: const InputDecoration(
+                            prefixIcon: Icon(SuperIcons.bs_calendar),
+                            labelText: 'Date of Birth'),
                         readOnly: true,
                         onTap: () async {
                           DateTime? pickedDate = await showDatePicker(
@@ -199,20 +207,20 @@ class _SignupPageState extends State<SignupPage> {
                       TextFormField(
                         controller: _phoneController,
                         decoration: const InputDecoration(
-                          prefixIcon: Icon(SuperIcons.ii_call),
-                          labelText: 'Phone'),
+                            prefixIcon: Icon(SuperIcons.ii_call),
+                            labelText: 'Phone'),
                         keyboardType: TextInputType.phone,
-                         validator: (value) {
-    final phoneRegExp = RegExp(r'^\+?[1-9]\d{1,14}$'); // E.164 format
-    if (value == null || value.isEmpty) {
-      return 'Enter a valid phone number';
-    } else if (!phoneRegExp.hasMatch(value)) {
-      return 'Enter a valid phone number';
-    }
-    return null;
-  },
-),
-                      
+                        validator: (value) {
+                          final phoneRegExp =
+                              RegExp(r'^\+?[1-9]\d{1,14}$'); // E.164 format
+                          if (value == null || value.isEmpty) {
+                            return 'Enter a valid phone number';
+                          } else if (!phoneRegExp.hasMatch(value)) {
+                            return 'Enter a valid phone number';
+                          }
+                          return null;
+                        },
+                      ),
                       const SizedBox(height: 10),
                       InkWell(
                         onTap: () {
@@ -231,13 +239,13 @@ class _SignupPageState extends State<SignupPage> {
                       const SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: _signUp,
-                        child: const Text('Sign Up',
-                        style: TextStyle(
-                          color: Color(0xFFf1f5f5)
-                        ),
+                        child: const Text(
+                          'Sign Up',
+                          style: TextStyle(color: Color(0xFFf1f5f5)),
                         ),
                         style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all(Color(0xFF69adb2))                        ),
+                            backgroundColor:
+                                WidgetStateProperty.all(Color(0xFF69adb2))),
                       ),
                       const SizedBox(height: 10),
                       Text('OR'),
@@ -265,7 +273,6 @@ class _SignupPageState extends State<SignupPage> {
                                   child: Image.asset('assets/google icon.png')),
                             ),
                             SizedBox(width: 20),
-                            
                           ])
                     ],
                   ),

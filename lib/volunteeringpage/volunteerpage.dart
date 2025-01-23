@@ -22,22 +22,28 @@ Widget build(BuildContext context) {
     future: FirebaseFirestore.instance.collection('FoodBanks').doc(userId).get(),
     builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return CircularProgressIndicator();
+        return Center(child: CircularProgressIndicator());
       }
 
       if (snapshot.hasError) {
-        return Text('$userId   Error: ${snapshot.error}');
+        return Center(child: Text('Error: ${snapshot.error}'));
+      }
+
+      // Check if snapshot.data exists and contains data
+      if (!snapshot.hasData || snapshot.data == null || snapshot.data!.data() == null) {
+        return Center(child: Text('No data found for the user.'));
       }
 
       final userData = snapshot.data!.data() as Map<String, dynamic>;
       final role = userData['role'];
 
-      return  role == 'User'
-            ? Uservolunteeringview()
-            : FoodBankVolunteeringView();
-    }
-      );
-    }
+      return role == 'User'
+          ? Uservolunteeringview()
+          : FoodBankVolunteeringView();
+    },
+  );
+}
+
 }
 
 

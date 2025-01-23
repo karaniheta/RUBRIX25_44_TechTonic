@@ -2,6 +2,7 @@ import 'package:anvaya/auth.dart';
 import 'package:anvaya/bottom%20navbar/bnavbar.dart';
 
 import 'package:anvaya/login/login_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -53,37 +54,73 @@ class _SignorgPageState extends State<SignorgPage> {
     }
   }
 
-  void _signUp() async {
-    if (!_formKey.currentState!.validate()) return;
+void _signUp() async {
+  if (!_formKey.currentState!.validate()) return;
 
-    setState(() => isLoading = true);
+  setState(() => isLoading = true);
 
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
+  try {
+    // Attempt to create a new user
+    UserCredential userCredential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => BottomNavbar()),
-      );
+    // Get user UID
+    String uid = userCredential.user!.uid;
 
+    // Save user data in Firestore
+    await FirebaseFirestore.instance.collection('FoodBanks').doc(uid).set({
+      'foodbank_name': _nameController.text.trim(),
+      'foodbank_emailId': _emailController.text.trim(),
+      'foodbank_phoneNumber': _phoneController.text.trim(),
+      'uid': uid,
+      'role': 'FoodBank',
+      'foodbank_address':_addressController.text.trim()
+    });
+
+    // Navigate to homepage
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => BottomNavbar()),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Signup successful'),
+        backgroundColor: Color(0xFF1E88E5),
+      ),
+    );
+  } on FirebaseAuthException catch (e) {
+    // Handle specific FirebaseAuth errors
+    if (e.code == 'email-already-in-use') {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Signup successful'),
-          backgroundColor: Color(0xFF1E88E5),
+          content: Text('This email is already in use. Please log in.'),
+          backgroundColor: Color(0xFFE53935),
         ),
       );
-    } catch (e) {
-      setState(() => isLoading = false);
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text('Signup failed: $e'),
-            backgroundColor: Color(0xFF1E88E5)),
+          content: Text('Signup failed: ${e.message}'),
+          backgroundColor: const Color(0xFFE53935),
+        ),
       );
     }
+  } catch (e) {
+    // Handle other errors
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('An unexpected error occurred: $e'),
+        backgroundColor: const Color(0xFFE53935),
+      ),
+    );
+  } finally {
+    setState(() => isLoading = false);
   }
+}
 
   @override
   Widget build(BuildContext context) {
