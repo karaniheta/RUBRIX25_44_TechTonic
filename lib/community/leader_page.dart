@@ -1,7 +1,7 @@
 import 'package:anvaya/constants/colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LeaderboardPage extends StatefulWidget {
   @override
@@ -17,6 +17,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
     List<Map<String, dynamic>> leaderboard = snapshot.docs.map((doc) {
       final data = doc.data() as Map<String, dynamic>;
       return {
+        'uid': doc.id, // Add UID for comparison
         'user_name': data['user_name'] ?? 'Unknown',
         'points': data['points'] ?? 0,
       };
@@ -37,11 +38,14 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
+
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Column(
+        
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          SizedBox(height: 20,),
           Text(
             'L E A D E R B O A R D',
             style: TextStyle(
@@ -50,6 +54,8 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
               fontSize: 20,
             ),
           ),
+
+          SizedBox(height: 20,),
           FutureBuilder<List<Map<String, dynamic>>>(
             future: fetchLeaderboardData(),
             builder: (context, snapshot) {
@@ -86,6 +92,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                             user: topThree[1],
                             height: 140,
                             color: Colors.grey,
+                            currentUserUid: currentUser?.uid,
                           ),
 
                         // First place
@@ -95,6 +102,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                             user: topThree[0],
                             height: 180,
                             color: Colors.amber,
+                            currentUserUid: currentUser?.uid,
                           ),
 
                         // Third place
@@ -104,6 +112,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                             user: topThree[2],
                             height: 120,
                             color: Colors.brown,
+                            currentUserUid: currentUser?.uid,
                           ),
                       ],
                     ),
@@ -115,11 +124,9 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                         itemCount: others.length,
                         itemBuilder: (context, index) {
                           final user = others[index];
-                          String displayName = user['user_name'];
-                          if (currentUser != null &&
-                              user['user_name'] == currentUser.displayName) {
-                            displayName = "You";
-                          }
+                          String displayName = user['uid'] == currentUser?.uid
+                              ? '${user['user_name']} (You)'
+                              : user['user_name'];
                           return Card(
                             margin: EdgeInsets.symmetric(vertical: 8.0),
                             shape: RoundedRectangleBorder(
@@ -158,11 +165,15 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
     required Map<String, dynamic> user,
     required double height,
     required Color color,
+    required String? currentUserUid,
   }) {
+    String displayName = user['uid'] == currentUserUid
+        ? '${user['user_name']} (You)'
+        : user['user_name'];
     return Column(
       children: [
         Text(
-          user['user_name'],
+          displayName,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         Container(
