@@ -2,6 +2,8 @@ import 'package:anvaya/constants/colors.dart';
 import 'package:anvaya/login/login_page.dart';
 import 'package:anvaya/profile/account.dart';
 import 'package:anvaya/profile/transactions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:super_icons/super_icons.dart';
 
@@ -13,6 +15,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -49,10 +52,12 @@ class _ProfileState extends State<Profile> {
             Profilebuttons(
                 text: 'Your Transactions',
                 icon: SuperIcons.is_transaction_minus_outline,
-                onTap: () { Navigator.push(
+                onTap: () {
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => Transactions()),
-                  );}),
+                  );
+                }),
             SizedBox(
               height: 10,
             ),
@@ -85,11 +90,21 @@ class _ProfileState extends State<Profile> {
 }
 
 void _showLogoutConfirmationDialog(BuildContext context) {
-  void tologin() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
-    );
+  Future<void> logout() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        await FirebaseAuth.instance.signOut();
+        print('$user logged off');
+      }
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    } catch (e) {
+      print('Error logging out : $e');
+    }
   }
 
   showDialog(
@@ -126,7 +141,7 @@ void _showLogoutConfirmationDialog(BuildContext context) {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              tologin();
+              logout();
             },
             child: Text(
               'Logout',

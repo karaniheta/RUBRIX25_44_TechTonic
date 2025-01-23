@@ -1,6 +1,5 @@
 import 'package:anvaya/chatbot%20page/chatbotpage.dart';
 import 'package:anvaya/community/leader_page.dart';
-
 import 'package:anvaya/constants/colors.dart';
 import 'package:anvaya/home%20page/home.dart';
 import 'package:anvaya/profile/profile.dart';
@@ -65,8 +64,8 @@ class _NavbarState extends State<BottomNavbar> {
               label: 'Ai MealPrep',
             ),
             BottomNavigationBarItem(
-              icon: Icon(SuperIcons.cl_group_solid),
-              label: 'Community',
+              icon: Icon(SuperIcons.is_ranking_1_bold),
+              label: 'Leaderboard',
             ),
             BottomNavigationBarItem(
               icon: Icon(SuperIcons.bs_person_fill),
