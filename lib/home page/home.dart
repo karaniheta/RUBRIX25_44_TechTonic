@@ -1,5 +1,6 @@
 import 'package:anvaya/constants/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:super_icons/super_icons.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -126,10 +127,12 @@ class _HomeState extends State<Home> {
                   Container(
                     height: 400, // Fixed height for the Container
                     width: double.infinity, // Full width of the screen
-                    color: Colors.grey[200], // Background color
+                    // color: Colors.grey[200], // Background color
                     padding: EdgeInsets.all(10),
                     child: GridView.builder(
+                      physics: NeverScrollableScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          
                           crossAxisCount: 1, // Number of columns
                           crossAxisSpacing: 10, // Horizontal spacing
                           mainAxisSpacing: 10, // Vertical spacing
@@ -137,16 +140,17 @@ class _HomeState extends State<Home> {
                         ),
                         itemCount: 1,
                         itemBuilder: (context, index) {
-                          return Card(
-                              color:AppColors.nonselected,
-                              elevation: 4,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text('1')
-                                ],
-                              ));
+                          return Productcard();
+                          // Card(
+                          //     color:AppColors.nonselected,
+                          //     elevation: 4,
+                          //     child: Column(
+                          //       crossAxisAlignment: CrossAxisAlignment.center,
+                          //       mainAxisAlignment: MainAxisAlignment.end,
+                          //       children: [
+                          //         Text('1')
+                          //       ],
+                          //     ));
                         }),
                   )
                 ],
@@ -157,47 +161,120 @@ class _HomeState extends State<Home> {
   }
 }
 
-class CategoryCard extends StatelessWidget {
-  final String title;
-  final IconData icon;
+// class ProductCard extends StatelessWidget {
+//   final String title;
+//   final IconData icon;
 
-  const CategoryCard({
-    Key? key,
-    required this.title,
-    required this.icon,
-  }) : super(key: key);
+//   const ProductCard({
+//     Key? key,
+//     required this.title,
+//     required this.icon,
+//   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 100,
-      margin: EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Icon(icon, size: 40, color: Colors.blue),
-          SizedBox(height: 10),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: 100,
+//       margin: EdgeInsets.symmetric(horizontal: 8),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(10),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.grey.withOpacity(0.5),
+//             spreadRadius: 2,
+//             blurRadius: 5,
+//             offset: Offset(0, 3),
+//           ),
+//         ],
+//       ),
+//       child: Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: <Widget>[
+//           Icon(icon, size: 40, color: Colors.blue),
+//           SizedBox(height: 10),
+//           Text(
+//             title,
+//             style: TextStyle(
+//               fontSize: 16,
+//               fontWeight: FontWeight.bold,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//  }
+
+Widget Productcard() {
+  return Card(
+    
+    
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+    
+    color: const Color.fromARGB(255, 255, 255, 255),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      
+      children:[ 
+        Expanded(
+          flex: 2,
+          child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            image: DecorationImage(
+              image: AssetImage('assets/pizza.png'),
+              fit: BoxFit.cover,
             ),
           ),
-        ],
+              ),
+        ),
+    
+      Expanded(
+        flex: 1,
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(SuperIcons.bx_food_tag, color: Colors.green),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Product Name',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+              // SizedBox(height: 5),
+              // Text(
+              //   'Product Description',
+              //   style: TextStyle(
+              //     fontSize: 10,
+              //   ),
+              // ),
+              // SizedBox(height: 5),
+              Text(
+                'Price: \$100',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                ),
+              ),
+                              ],
+              ),
+
+            ],
+          ),
+        ),
       ),
-    );
-  }
+      ]
+    ),
+  );
 }
+
+// }
