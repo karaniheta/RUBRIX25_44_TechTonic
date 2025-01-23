@@ -12,35 +12,81 @@ class Volunteerpage extends StatefulWidget {
 }
 
 class _VolunteerpageState extends State<Volunteerpage> {
+  
+late Future<Map<String, dynamic>?> userData;
+
+  @override
+  void initState() {
+    super.initState();
+    userData = fetchUserData();
+  }
+
+  Future<Map<String, dynamic>?> fetchUserData() async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+
+    if (userId == null) {
+      // Handle unauthenticated state
+      return null;
+    }
+
+    try {
+      // Check the 'Users' collection
+      final userDoc = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(userId)
+          .get();
+
+      if (userDoc.exists) {
+        return {'role': 'User', ...userDoc.data()!};
+      }
+
+      // Check the 'FoodBank' collection
+      final foodBankDoc = await FirebaseFirestore.instance
+          .collection('FoodBanks')
+          .doc(userId)
+          .get();
+
+      if (foodBankDoc.exists) {
+        return {'role': 'FoodBank', ...foodBankDoc.data()!};
+      }
+
+      // If the user is not found in either collection
+      return null;
+    } catch (e) {
+      print("Error fetching user data: $e");
+      return null;
+    }
+  }
 
 
   @override
 Widget build(BuildContext context) {
-  final userId = FirebaseAuth.instance.currentUser!.uid;
-
-  return FutureBuilder<DocumentSnapshot>(
-    future: FirebaseFirestore.instance.collection('FoodBanks').doc(userId).get(),
+  return FutureBuilder<Map<String, dynamic>?>(
+    future: userData,
     builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Center(child: CircularProgressIndicator());
-      }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-      if (snapshot.hasError) {
-        return Center(child: Text('Error: ${snapshot.error}'));
-      }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
 
-      // Check if snapshot.data exists and contains data
-      if (!snapshot.hasData || snapshot.data == null || snapshot.data!.data() == null) {
-        return Center(child: Text('No data found for the user.'));
-      }
+          if (!snapshot.hasData || snapshot.data == null) {
+            return const Center(child: Text('No user data found'));
+          }
 
-      final userData = snapshot.data!.data() as Map<String, dynamic>;
-      final role = userData['role'];
+          final data = snapshot.data!;
+          final role = data['role'];
 
-      return role == 'User'
-          ? Uservolunteeringview()
-          : FoodBankVolunteeringView();
-    },
+          if (role == 'User') {
+            return Uservolunteeringview();
+          } else if (role == 'FoodBank') {
+            return FoodBankVolunteeringView();
+          } else {
+            return const Center(child: Text('Unknown role'));
+          }
+        },
   );
 }
 

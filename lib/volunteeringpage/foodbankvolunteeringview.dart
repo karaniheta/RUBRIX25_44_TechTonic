@@ -35,13 +35,21 @@ class _FoodBankVolunteeringViewState extends State<FoodBankVolunteeringView> {
               Spacer(),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: IconButton(
-                  onPressed: () => _showAddVacancyDialog(),
-                  icon: Icon(Icons.add),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.titletext,   
+                    borderRadius: BorderRadius.circular(40)
+                  ),
+                  child: IconButton(
+                    onPressed: () => _showAddVacancyDialog(),
+                    icon: Icon(Icons.add, color: AppColors.navbarcolorbg,),
+                  ),
                 ),
               ),
             ],
           ),
+
+          SizedBox(height: 10,),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
@@ -66,74 +74,82 @@ class _FoodBankVolunteeringViewState extends State<FoodBankVolunteeringView> {
                     final opportunity =
                         opportunities[index].data() as Map<String, dynamic>;
 
-                    return Card(
-                        margin: EdgeInsets.all(8.0),
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                              color: AppColors.primaryColor,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      opportunity['title'],
-                                      style: TextStyle(
-                                          fontFamily: 'intersB',
-                                          color: AppColors.navbarcolorbg,
-                                          fontSize: 18),
-                                    ),
-                                    Spacer(),
-                                    IconButton(
-                                      onPressed:
-                                          opportunities[index].reference.delete,
-                                      icon: Icon(Icons.delete),
-                                      color: AppColors.navbarcolorbg,
-                                    )
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  opportunity['description'],
-                                  style: TextStyle(
-                                      fontFamily: 'interR',
-                                      color: AppColors.navbarcolorbg,
-                                      fontSize: 14),
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                
-                              ],
-                            ),
-                            Positioned(
-                                  bottom: -20,
-                                  right: 10,
-                                  child: Container(
-                                    padding: EdgeInsets.fromLTRB(7, 5, 7, 5),
-                                    decoration: BoxDecoration(
-                                        color: AppColors.selectedtile,
-                                        border: Border.all(
-                                            color: AppColors.navbarcolorbg),
-                                        borderRadius: BorderRadius.circular(20)),
-                                    child: Text(
-                                      'Vacancies : ${opportunity['vacancies'].toString()}',
-                                      style: TextStyle(
-                                          fontFamily: 'interR',
-                                          color: AppColors.navbarcolorbg,
-                                          fontSize: 14),
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Card(
+                          margin: EdgeInsets.all(8.0),
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: AppColors.titletext,
+                                width: 1
+                              ),
+                                color: AppColors.primaryColor,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        opportunity['title'],
+                                        style: TextStyle(
+                                            fontFamily: 'intersB',
+                                            color: AppColors.titletext,
+                                            fontSize: 18),
+                                      ),
+                                      Spacer(),
+                                      IconButton(
+                                        onPressed:
+                                            opportunities[index].reference.delete,
+                                        icon: Icon(Icons.delete),
+                                        color: AppColors.titletext,
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    opportunity['description'],
+                                    style: TextStyle(
+                                        fontFamily: 'interR',
+                                        color: AppColors.titletext,
+                                        fontSize: 14),
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  
+                                ],
+                              ),
+                              Positioned(
+                                    bottom: -20,
+                                    right: 10,
+                                    child: Container(
+                                      padding: EdgeInsets.fromLTRB(7, 5, 7, 5),
+                                      decoration: BoxDecoration(
+                                          color: AppColors.selectedtile,
+                                          border: Border.all(
+                                            width: 4,
+                                              color: AppColors.primaryColor),
+                                          borderRadius: BorderRadius.circular(20)),
+                                      child: Text(
+                                        'Vacancies : ${opportunity['vacancies'].toString()}',
+                                        style: TextStyle(
+                                            fontFamily: 'interR',
+                                            color: AppColors.navbarcolorbg,
+                                            fontSize: 14),
+                                      ),
                                     ),
                                   ),
-                                ),
-                            ]
-                          ),
-                        ));
+                              ]
+                            ),
+                          )),
+                    );
                   },
                 );
               },
@@ -289,9 +305,15 @@ class _FoodBankVolunteeringViewState extends State<FoodBankVolunteeringView> {
     );
   }
 
-  void addVacancy(String title, String description, int vacancies) {
+ Future <void> addVacancy(String title, String description, int vacancies) async {
     final foodBankId = FirebaseAuth.instance.currentUser!.uid;
 
+    DocumentSnapshot foodbankinfo= await FirebaseFirestore.instance
+                  .collection('FoodBanks')
+                  .doc(foodBankId)
+                  .get();
+
+                  String foodbank_name = foodbankinfo['foodbank_name'];
     FirebaseFirestore.instance
         .collection('FoodBanks')
         .doc(foodBankId)
@@ -300,6 +322,8 @@ class _FoodBankVolunteeringViewState extends State<FoodBankVolunteeringView> {
       'title': title,
       'description': description,
       'vacancies': vacancies,
+      'foodbank_uid' :foodBankId,
+      'foodbank_name' : foodbank_name,
       'applicants': [],
     });
 

@@ -25,7 +25,7 @@ class Usertype extends StatelessWidget {
                         
                         SizedBox(
                           height: 200, child: Image.asset('assets/applogo.png')),
-                          SizedBox(height: 150,),
+                          SizedBox(height: 130,),
           Padding(padding: EdgeInsets.all(16),
 
           
@@ -34,78 +34,88 @@ class Usertype extends StatelessWidget {
               
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>SignupPage())), 
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  minimumSize: Size(double.infinity,50 ),
-                  
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0)
-                  )
-          
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20,0,20,0),
-                  child: Container(
+                Container(
+                  width: 350,
+                  child: ElevatedButton(onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>SignupPage())), 
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryColor,
                     
                     
-                    child: Center(
-                      child: Text('SignUp as User',
-                      
-                      style: TextStyle(
-                        fontFamily: 'intersB',
-                        fontSize: 22,
-                        color: AppColors.secondaryColor
-                      ),),
-                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0)
+                    )
                   ),
-                )),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10,0,10,0),
+                    child: Container(
+                      
+                      
+                      child: Center(
+                        child: Text('SignUp as User',
+                        
+                        style: TextStyle(
+                          fontFamily: 'intersB',
+                          fontSize: 18,
+                          color: AppColors.secondaryColor
+                        ),),
+                      ),
+                    ),
+                  )),
+                ),
                 SizedBox(
                   height: 10,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(child: Divider(
-                      thickness: 1.8,
-                    )),
+                    Container(
+                      width: 100,
+                      child: Divider(
+                        thickness: 1,
+                      ),
+                    ),
                     Padding(padding: EdgeInsets.all(8.0),
-                    child: Text('OR',
+                    child: Text('or',
                     style: TextStyle(
                       color: AppColors.text,
-                      fontSize: 22
+                      fontSize: 16
                     ),),),
-                    Expanded(child: 
-                    Divider(
-                      thickness: 1.8,
-                    ))
+                    Container(
+                      width: 100,
+                      child: Divider(
+                        thickness: 1,
+                      ),
+                    )
                   
                   ],
                 ),
                 SizedBox(height: 10),
-                ElevatedButton(onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>SignorgPage())), 
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  minimumSize: Size(double.infinity,50 ),
-                  
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0)
-                  )
-          
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20,0,20,0),
-                  child: Container(
-                    // width: 180,
-                    child: Center(
-                      child: Text('SignUp as FoodBank',
-                      style: TextStyle(
-                        fontFamily: 'intersB',
-                        fontSize: 22,
-                        color: AppColors.secondaryColor
-                      ),),
-                    ),
+                Container(
+                  width: 350,
+                  child: ElevatedButton(onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>SignorgPage())), 
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryColor,
+                    
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0)
+                    )
+                            
                   ),
-                )),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10,0,10,0),
+                    child: Container(
+                      // width: 180,
+                      child: Center(
+                        child: Text('SignUp as FoodBank',
+                        style: TextStyle(
+                          fontFamily: 'intersB',
+                          fontSize: 16,
+                          color: AppColors.secondaryColor
+                        ),),
+                      ),
+                    ),
+                  )),
+                ),
           
               ],
             ),),
