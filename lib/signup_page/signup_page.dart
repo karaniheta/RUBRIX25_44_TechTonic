@@ -2,6 +2,7 @@ import 'package:anvaya/auth.dart';
 import 'package:anvaya/bottom%20navbar/bnavbar.dart';
 
 import 'package:anvaya/login/login_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -89,6 +90,31 @@ class _SignupPageState extends State<SignupPage> {
       );
     }
   }
+  Future<void> signUp() async {
+  try {
+    // Create user with email and password
+    UserCredential userCredential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: _emailController.text.trim(), password: _passwordController.text.trim());
+
+    // Get user UID
+    String uid = userCredential.user!.uid;
+
+    // Save user data in Firestore
+    await FirebaseFirestore.instance.collection('Users').doc(uid).set({
+      'user_name': _nameController.text.trim(),
+      'user_emailId': _emailController.text.trim(),
+      'dob': _dobController.text.trim(),
+      'user_phoneNumber':_phoneController.text.trim(),
+      'uid':uid,
+      'role':'User',
+      'points':0,
+    });
+
+    print('User registered and data saved!');
+  } catch (e) {
+    print('Error: $e');
+  }
+}
 
   @override
   Widget build(BuildContext context) {
