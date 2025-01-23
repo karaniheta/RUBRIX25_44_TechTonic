@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:anvaya/constants/colors.dart';
 import 'package:anvaya/donation%20page/donation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -37,13 +39,13 @@ class _HomeState extends State<Home> {
                     
                   ),
                   color: AppColors.secondaryColor,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10,
-                      offset: Offset(0, 5),
-                    ),
-                  ],
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //     color: Colors.black26,
+                  //     blurRadius: 10,
+                  //     offset: Offset(0, 5),
+                  //   ),
+                  // ],
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -88,8 +90,8 @@ class _HomeState extends State<Home> {
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black12,
-                              blurRadius: 8,
-                              offset: Offset(0, 4),
+                              blurRadius: 3,
+                              offset: Offset(0, 2),
                             ),
                           ],
                         ),
@@ -329,21 +331,32 @@ void receivedialog(BuildContext context, product) {
   );
 }
 
-Future<void> Updatetransaction(product) async {
-  final owner = FirebaseAuth.instance.currentUser!;
-  final transaction = FirebaseFirestore.instance.collection('Transactions').doc();
 
-  transaction.set({
-    'transactionId': transaction.id,
-    'receiverId': owner.uid,
-    'productId': product['product_id'],
-    'productName': product['name'],
-    'donorId': product['owner_id'],
-    'foodbankId': 'temp',
-    'time': Timestamp.now(),
-    'unit': product['units'],
-  });
+Future<void> Updatetransaction( product) async
+{ 
+   final owner = FirebaseAuth.instance.currentUser!;
+    final transaction = FirebaseFirestore.instance.collection('Transactions').doc();
+  final code = Random().nextInt(8999)+1000;
+    transaction.set({
+      'transactionId': transaction.id,
+      'receiverId': owner.uid,
+      'productId': product['product_id'],
+      'productName': product['name'],
+      'donorId': product['owner_id'],
+      'foodbankId': 'temp',
+      'time': Timestamp.now(),
+      'unit': product['units'],
+      'iscomplete': false,
+      'code': code,
+    });
 
+    deleteproduct(product);
+
+
+}
+// }
+
+Future<void> deleteproduct(product) async {
   await FirebaseFirestore.instance
       .collection('Products')
       .doc(product['product_id'])

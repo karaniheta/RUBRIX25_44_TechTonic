@@ -2,7 +2,7 @@ import 'package:anvaya/constants/colors.dart';
 import 'package:anvaya/login/login_page.dart';
 import 'package:anvaya/profile/about.dart';
 import 'package:anvaya/profile/account.dart';
-
+import 'package:anvaya/profile/impact.dart';
 import 'package:anvaya/profile/rewards.dart';
 import 'package:anvaya/profile/transactions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -65,7 +65,12 @@ class _ProfileState extends State<Profile> {
               height: 10,
             ),
             Profilebuttons(
-                text: 'Your Impact', icon: SuperIcons.bs_star, onTap: (){}),
+                text: 'Your Impact', icon: SuperIcons.bs_star, onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => FoodRescueStats()),
+                  );
+                }),
             SizedBox(
               height: 10,
             ),

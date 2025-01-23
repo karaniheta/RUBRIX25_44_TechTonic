@@ -432,6 +432,7 @@ class _DonationState extends State<Donation> {
       'time_created': Timestamp.now(),
       'isveg': isveg,
       'exp_date':date,
+
       // 'image':
       // 'applicants': [],
     });
