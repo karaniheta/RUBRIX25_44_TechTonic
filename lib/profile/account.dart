@@ -287,6 +287,31 @@ class _AccountState extends State<Account> {
                     ],
                   ),
                 ),
+                Divider(
+                  thickness: 1.5,
+                ),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Address\n', // Label
+                        style: TextStyle(
+                          color: AppColors.secondaryColor, // Label color
+                          fontSize: 18,
+                          fontFamily: 'intersB',
+                        ),
+                      ),
+                      TextSpan(
+                        text: '${data['address']}', // User Name
+                        style: TextStyle(
+                          color: AppColors.secondaryColor, // User name color
+                          fontSize: 16,
+                          fontFamily: 'interR',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

@@ -24,6 +24,7 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
   bool isLoading = false;
 
   Future<void> signinwithGoogle() async {
@@ -54,75 +55,75 @@ class _SignupPageState extends State<SignupPage> {
     }
   }
 
-void _signUp() async {
-  if (!_formKey.currentState!.validate()) return;
+  void _signUp() async {
+    if (!_formKey.currentState!.validate()) return;
 
-  setState(() => isLoading = true);
+    setState(() => isLoading = true);
 
-  try {
-    // Attempt to create a new user
-    UserCredential userCredential = await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
+    try {
+      // Attempt to create a new user
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
 
-    // Get user UID
-    String uid = userCredential.user!.uid;
+      // Get user UID
+      String uid = userCredential.user!.uid;
 
-    // Save user data in Firestore
-    await FirebaseFirestore.instance.collection('Users').doc(uid).set({
-      'user_name': _nameController.text.trim(),
-      'user_emailId': _emailController.text.trim(),
-      'dob': _dobController.text.trim(),
-      'user_phoneNumber': _phoneController.text.trim(),
-      'uid': uid,
-      'role': 'User',
-      'points': 0,
-    });
+      // Save user data in Firestore
+      await FirebaseFirestore.instance.collection('Users').doc(uid).set({
+        'user_name': _nameController.text.trim(),
+        'user_emailId': _emailController.text.trim(),
+        'dob': _dobController.text.trim(),
+        'user_phoneNumber': _phoneController.text.trim(),
+        'uid': uid,
+        'role': 'User',
+        'points': 0,
+        'address':_addressController.text.trim(),
+      });
 
-    // Navigate to homepage
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => BottomNavbar()),
-    );
+      // Navigate to homepage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => BottomNavbar()),
+      );
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Signup successful'),
-        backgroundColor: Color(0xFF1E88E5),
-      ),
-    );
-  } on FirebaseAuthException catch (e) {
-    // Handle specific FirebaseAuth errors
-    if (e.code == 'email-already-in-use') {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('This email is already in use. Please log in.'),
-          backgroundColor: Color(0xFFE53935),
+          content: Text('Signup successful'),
+          backgroundColor: Color(0xFF1E88E5),
         ),
       );
-    } else {
+    } on FirebaseAuthException catch (e) {
+      // Handle specific FirebaseAuth errors
+      if (e.code == 'email-already-in-use') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('This email is already in use. Please log in.'),
+            backgroundColor: Color(0xFFE53935),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Signup failed: ${e.message}'),
+            backgroundColor: const Color(0xFFE53935),
+          ),
+        );
+      }
+    } catch (e) {
+      // Handle other errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Signup failed: ${e.message}'),
+          content: Text('An unexpected error occurred: $e'),
           backgroundColor: const Color(0xFFE53935),
         ),
       );
+    } finally {
+      setState(() => isLoading = false);
     }
-  } catch (e) {
-    // Handle other errors
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('An unexpected error occurred: $e'),
-        backgroundColor: const Color(0xFFE53935),
-      ),
-    );
-  } finally {
-    setState(() => isLoading = false);
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -220,6 +221,26 @@ void _signUp() async {
                           }
                           return null;
                         },
+                      ),
+                      SizedBox(height: 10,),
+                      TextFormField(
+                        controller: _addressController,
+                        decoration: const InputDecoration(
+                            prefixIcon: Icon(SuperIcons.ii_map),
+                            labelText: 'Address'),
+                        keyboardType: TextInputType.streetAddress,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                    return 'Please enter your address.';
+                  }
+                  if (value.length < 10) {
+                    return 'Address should be at least 10 characters long.';
+                  }
+                  if (!RegExp(r'^[a-zA-Z0-9\s,.-]+$').hasMatch(value)) {
+                    return 'Address contains invalid characters.';
+                  }
+                  return null;
+                },
                       ),
                       const SizedBox(height: 10),
                       InkWell(
