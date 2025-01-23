@@ -33,7 +33,7 @@ class _GuidelinespageState extends State<Guidelinespage> {
                       child: Text.rich(
                         TextSpan(children:[
                           TextSpan(
-                            text: '              Guidelines for Donors',
+                            text: 'Guidelines for Donors',
                             style: TextStyle(
                               color: AppColors.titletext,
                               fontSize: 20,
