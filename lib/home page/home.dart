@@ -258,11 +258,11 @@ Widget Productcard() {
               // ),
               // SizedBox(height: 5),
               Text(
-                'Price: \$100',
+                'Price: Rs.100',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green,
+                  color: AppColors.text,
                 ),
               ),
                               ],
