@@ -1,5 +1,6 @@
 import 'package:anvaya/constants/colors.dart';
 import 'package:anvaya/login/login_page.dart';
+import 'package:anvaya/profile/about.dart';
 import 'package:anvaya/profile/account.dart';
 import 'package:anvaya/profile/transactions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -72,7 +73,7 @@ class _ProfileState extends State<Profile> {
               height: 10,
             ),
             Profilebuttons(
-                text: 'About', icon: SuperIcons.bs_info_circle, onTap: () {}),
+                text: 'About', icon: SuperIcons.bs_info_circle, onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>AboutPage()))),
 
             SizedBox(
               height: 10,

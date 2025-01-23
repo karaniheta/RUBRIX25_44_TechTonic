@@ -114,7 +114,7 @@ class _AccountState extends State<Account> {
           ),
         ),
         SizedBox(
-          height: 20,
+          height: 40,
         ),
         Center(
           child: Container(
