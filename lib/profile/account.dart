@@ -35,17 +35,17 @@ class _AccountState extends State<Account> {
           .get();
 
       if (userDoc.exists) {
-        return {'role': 'user', ...userDoc.data()!};
+        return {'role': 'User', ...userDoc.data()!};
       }
 
       // Check the 'FoodBank' collection
       final foodBankDoc = await FirebaseFirestore.instance
-          .collection('FoodBank')
+          .collection('FoodBanks')
           .doc(userId)
           .get();
 
       if (foodBankDoc.exists) {
-        return {'role': 'foodbank', ...foodBankDoc.data()!};
+        return {'role': 'FoodBank', ...foodBankDoc.data()!};
       }
 
       // If the user is not found in either collection
@@ -60,6 +60,11 @@ class _AccountState extends State<Account> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('Your Account',
+        style: TextStyle(
+          fontFamily: 'interB',
+          color: AppColors.titletext
+        ),),
         backgroundColor: AppColors.secondaryColor,
       ),
       body: FutureBuilder<Map<String, dynamic>?>(
@@ -80,9 +85,9 @@ class _AccountState extends State<Account> {
           final data = snapshot.data!;
           final role = data['role'];
 
-          if (role == 'user') {
+          if (role == 'User') {
             return _buildUserView(data);
-          } else if (role == 'foodbank') {
+          } else if (role == 'FoodBank') {
             return _buildFoodBankView(data);
           } else {
             return const Center(child: Text('Unknown role'));
@@ -97,9 +102,9 @@ class _AccountState extends State<Account> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('User Name: ${data['name']}', style: _textStyle()),
-          Text('Email: ${data['email']}', style: _textStyle()),
-          Text('Role: User', style: _textStyle()),
+          Text('User Name: ${data['user_name']}', style: _textStyle()),
+          Text('Email: ${data['user_emailId']}', style: _textStyle()),
+          Text('Account: User', style: _textStyle()),
         ],
       ),
     );
@@ -110,9 +115,9 @@ class _AccountState extends State<Account> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Food Bank Name: ${data['name']}', style: _textStyle()),
-          Text('Contact: ${data['contact']}', style: _textStyle()),
-          Text('Address: ${data['address']}', style: _textStyle()),
+          Text('Food Bank Name: ${data['foodbank_name']}', style: _textStyle()),
+          Text('Contact: ${data['foodbank_phoneNumber']}', style: _textStyle()),
+          Text('Address: ${data['foodbank_address']}', style: _textStyle()),
           Text('Role: Food Bank', style: _textStyle()),
         ],
       ),
