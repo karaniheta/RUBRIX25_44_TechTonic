@@ -178,29 +178,7 @@ void _signUp() async {
                             ? 'Password must be at least 6 characters'
                             : null,
                       ),
-                      SizedBox(height: 10),
-                      TextFormField(
-                        controller: _dobController,
-                        decoration: const InputDecoration(
-                            prefixIcon: Icon(SuperIcons.bs_calendar),
-                            labelText: 'Date of Birth'),
-                        readOnly: true,
-                        onTap: () async {
-                          DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(1900),
-                            lastDate: DateTime.now(),
-                          );
-                          if (pickedDate != null) {
-                            _dobController.text =
-                                DateFormat('yyyy-MM-dd').format(pickedDate);
-                          }
-                        },
-                        validator: (value) => value == null || value.isEmpty
-                            ? 'Enter your date of birth'
-                            : null,
-                      ),
+                     
                       SizedBox(height: 10),
                       TextFormField(
                         controller: _phoneController,
