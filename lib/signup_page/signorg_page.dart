@@ -77,7 +77,8 @@ void _signUp() async {
       'foodbank_phoneNumber': _phoneController.text.trim(),
       'uid': uid,
       'role': 'FoodBank',
-      'foodbank_address':_addressController.text.trim()
+      'foodbank_address':_addressController.text.trim(),
+      'points': 0,
     });
 
     // Navigate to homepage

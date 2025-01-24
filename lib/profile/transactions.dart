@@ -251,6 +251,45 @@ class TransactionCard extends StatelessWidget {
   void _verifyCode(BuildContext context) {
     TextEditingController codeController = TextEditingController();
 
+Future<void> addPointsToDonorAfterTransaction(String donorId) async {
+  try {
+    // References to both collections
+    final userCollection = FirebaseFirestore.instance.collection('Users');
+    final foodbankCollection = FirebaseFirestore.instance.collection('Foodbanks');
+
+    bool isDonorFound = false;
+
+    // Check the 'Users' collection
+    final userDoc = await userCollection.doc(donorId).get();
+    if (userDoc.exists) {
+      await userCollection.doc(donorId).update({
+        'points': FieldValue.increment(50),
+      });
+      print("Points added to donor in 'Users' collection.");
+      isDonorFound = true;
+    }
+
+    // If not found in 'Users', check the 'Foodbank' collection
+    if (!isDonorFound) {
+      final foodbankDoc = await foodbankCollection.doc(donorId).get();
+      if (foodbankDoc.exists) {
+        await foodbankCollection.doc(donorId).update({
+          'points': FieldValue.increment(50),
+        });
+        print("Points added to donor in 'Foodbank' collection.");
+        isDonorFound = true;
+      }
+    }
+
+    if (!isDonorFound) {
+      print("Donor ID not found in either collection.");
+    }
+  } catch (e) {
+    print("Failed to add points to donor: $e");
+  }
+}
+
+
     showDialog(
       context: context,
       builder: (context) {
@@ -276,6 +315,8 @@ class TransactionCard extends StatelessWidget {
                       .collection('Transactions')
                       .doc(transaction['transactionId'])
                       .update({'iscomplete': true});
+                      addPointsToDonorAfterTransaction(transaction['donorId']);
+                      
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Transaction marked as complete!")),

@@ -12,7 +12,7 @@ class RewardPage extends StatefulWidget {
 }
 
 class _RewardPageState extends State<RewardPage> {
-   int points = 0;
+  var points;
   String couponCode = '';
   String couponTitle = '';
   String companyName = '';
@@ -28,22 +28,35 @@ class _RewardPageState extends State<RewardPage> {
   Future<void> fetchUserPoints() async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
     final userDoc = await FirebaseFirestore.instance.collection('Users').doc(uid).get();
+    final foodbankdoc = await FirebaseFirestore.instance.collection('FoodBanks').doc(uid).get();
 
     if (userDoc.exists) {
       setState(() {
-        points = userDoc.data()!['points'] ?? 0;
+        points = userDoc.data()!['points'] ;
         isRedeemable = points >= 100;
       });
     }
+    else if (foodbankdoc.exists) {
+      setState(() {
+        points = foodbankdoc.data()!['points'] ;
+        isRedeemable = points >= 100;
+      });
+    }
+    else {
+  setState(() {
+    points = null;
+    isRedeemable = false;
+  });
+}
   }
 
   Future<void> fetchCouponDetails() async {
     // You can change the 'someCouponId' to the actual coupon document ID you need to fetch.
-    final couponDoc = await FirebaseFirestore.instance.collection('Coupon').doc('someCouponId').get();
+    final couponDoc = await FirebaseFirestore.instance.collection('Coupon').doc().get();
 
     if (couponDoc.exists) {
       setState(() {
-        companyName = couponDoc.data()!['companyName'] ?? '';
+        companyName = couponDoc.data()!['companyname'] ?? '';
         couponCode = couponDoc.data()!['code'] ?? '';
         couponTitle = couponDoc.data()!['title'] ?? '';
       });
@@ -84,133 +97,139 @@ class _RewardPageState extends State<RewardPage> {
         ),
         backgroundColor: AppColors.secondaryColor,
       ),
-      body: Column(
-        children: [
-          // Green Points Box
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 40, 10, 0),
-              child: Container(
-                height: 150,
-                width: 350,
-                decoration: BoxDecoration(
-                  color: Color(0xFF69ADB2),
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Row(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Green Points Box
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 40, 10, 0),
+                child: Container(
+                  height: 150,
+                  width: 350,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF69ADB2),
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  child: 
+                  
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Your Points",
+                              style: TextStyle(
+                                color: AppColors.secondaryColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            "Your Points",
+                            "$points points",
                             style: TextStyle(
                               color: AppColors.secondaryColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
                             ),
+                          ),
+                          SizedBox(width: 5),
+                          Icon(
+                            Icons.star, // Star icon as the asterisk symbol
+                            color: AppColors.secondaryColor,
+                            size: 18,
                           ),
                         ],
                       ),
+                      
+                     
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+        
+            // Coupon Details Container
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Container(
+                width: 350,
+                padding: EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: AppColors.secondaryColor,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(
+                    color: Color(0xFF69ADB2), // Border color
+                    width: 2, // Border width
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.nonselected,
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Company Name
+                    Text(
+                      "Company Name: $companyName",
+                      style: TextStyle(
+                        color: AppColors.titletext,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "$points points",
-                          style: TextStyle(
-                            color: AppColors.secondaryColor,
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(width: 5),
-                        Icon(
-                          Icons.star, // Star icon as the asterisk symbol
-                          color: AppColors.secondaryColor,
-                          size: 18,
-                        ),
-                      ],
+                    // Coupon Code
+                    Text(
+                      "Coupon Code: $couponCode",
+                      style: TextStyle(
+                        color: AppColors.titletext,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                    
-                   
+                    SizedBox(height: 5),
+                    // Coupon Title
+                    Text(
+                      "Title: $couponTitle",
+                      style: TextStyle(
+                        color: AppColors.titletext,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: isRedeemable ? redeemCoupon : null,
+                      child: Text(isRedeemable ? "Redeem Coupon" : "Insufficient Points"),
+                    ),
                   ],
                 ),
               ),
             ),
-          ),
-          SizedBox(height: 20),
-
-          // Coupon Details Container
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Container(
-              width: 350,
-              padding: EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                color: AppColors.secondaryColor,
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(
-                  color: Color(0xFF69ADB2), // Border color
-                  width: 2, // Border width
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppColors.nonselected,
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Company Name
-                  Text(
-                    "Company Name: $companyName",
-                    style: TextStyle(
-                      color: AppColors.titletext,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  // Coupon Code
-                  Text(
-                    "Coupon Code: $couponCode",
-                    style: TextStyle(
-                      color: AppColors.titletext,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  // Coupon Title
-                  Text(
-                    "Title: $couponTitle",
-                    style: TextStyle(
-                      color: AppColors.titletext,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: isRedeemable ? redeemCoupon : null,
-                    child: Text(isRedeemable ? "Redeem Coupon" : "Insufficient Points"),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
+
+

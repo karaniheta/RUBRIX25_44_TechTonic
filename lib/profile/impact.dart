@@ -1,198 +1,249 @@
-// import 'package:flutter/material.dart';
-
-// class Impact extends StatefulWidget {
-//   const Impact({super.key});
-
-//   @override
-//   State<Impact> createState() => _ImpactState();
-// }
-
-// class _ImpactState extends State<Impact> {
-//   @override
-//   // Widget build(BuildContext context) {
-//   //   return Scaffold(
-//   //     appBar: AppBar(
-//   //       title: Text('Impact'),
-//   //     ),
-//   //     body: Center(
-//   //       child: Column(
-//   //         mainAxisAlignment: MainAxisAlignment.center,
-//   //         children: const <Widget>[
-//   //           Text(
-//   //             'Your donations',
-//   //           ),
-
-
-//   //         ],
-//   //       ),
-//   //     ),
-//   //   );
-//   // }
-
-//   final double totalFoodRescued = 1200; // Example total rescued weight
-//   final int totalDonations = 25; // Example number of donations
-
-//   @override
-//   Widget build(BuildContext context) {
-//     double avgFoodPerDonation = totalFoodRescued / totalDonations;
-
-//     return Scaffold(
-//       appBar: AppBar(title: Text("Food Rescue Stats")),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text(
-//               "Total Food Rescued",
-//               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-//             ),
-//             SizedBox(height: 8),
-//             Text(
-//               "${totalFoodRescued.toStringAsFixed(2)} kg",
-//               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.green),
-//             ),
-//             SizedBox(height: 16),
-//             LinearProgressIndicator(
-//               value: 0.75, // Example progress
-//               backgroundColor: Colors.grey[300],
-//               color: Colors.green,
-//             ),
-//             SizedBox(height: 16),
-//             Text(
-//               "Donations Made",
-//               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-//             ),
-//             SizedBox(height: 8),
-//             Text(
-//               "$totalDonations",
-//               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.blue),
-//             ),
-//             SizedBox(height: 16),
-//             Text(
-//               "Average Food Saved per Donation",
-//               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-//             ),
-//             SizedBox(height: 8),
-//             Text(
-//               "${avgFoodPerDonation.toStringAsFixed(2)} kg",
-//               style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.orange),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 import 'package:anvaya/constants/colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:lottie/lottie.dart';
 
 class FoodRescueStats extends StatefulWidget {
   @override
   _FoodRescueStatsState createState() => _FoodRescueStatsState();
 }
 
-class _FoodRescueStatsState extends State<FoodRescueStats> {
-  // Mock data (replace with dynamic data in a real app)
-  double totalFoodRescued = 1200; // Example total rescued weight
-  int totalDonations = 25; // Example number of donations
-  double goalWeight = 1600; // Example goal for food rescue (for progress calculation)
+class _FoodRescueStatsState extends State<FoodRescueStats>
+    with SingleTickerProviderStateMixin {
+  final userid = FirebaseAuth.instance.currentUser!.uid;
+  double goalWeight = 100;
+  late AnimationController _controller =AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..forward();
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize animation controller for explicit animations
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    double avgFoodPerDonation = totalFoodRescued / totalDonations; // Calculate average food saved per donation
-    double progress = totalFoodRescued / goalWeight; // Progress percentage
-
     return Scaffold(
-      appBar: AppBar(title: Text("Food Rescue Stats")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Lottie Animation
-            // SizedBox(
-            //   height: 150,
-            //   // child: Lottie.asset('assets/animations/food_rescue.json'),
-            // ),
-            SizedBox(height: 16),
-
-            // Total Food Rescued with Circular Progress Indicator
-            CircularPercentIndicator(
-              radius: 100.0,
-              lineWidth: 3.0,
-              percent: progress.clamp(0.0, 1.0), // Clamp progress between 0 and 1
-              center: Column(
+      appBar: AppBar(
+        title: FadeTransition(
+          opacity: _controller,
+          child: Text(
+            "Food Rescue Stats",
+            style: TextStyle(fontSize: 24),
+          ),
+        ),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('Transactions')
+            .where('donorId', isEqualTo: userid)
+            .where('iscomplete', isEqualTo: true)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasError) {
+            return Center(
+              child: FadeTransition(
+                opacity: _controller,
+                child: Text(
+                  "Error: ${snapshot.error}",
+                  style: TextStyle(fontSize: 18, color: Colors.red),
+                ),
+              ),
+            );
+          }
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return Center(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    "${totalFoodRescued.toStringAsFixed(0)}",
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryColor,
+                  ScaleTransition(
+                    scale: _controller,
+                    child: Icon(
+                      Icons.warning_amber_rounded,
+                      size: 80,
+                      color: Colors.grey,
                     ),
-                  ).animate().fadeIn().scale(duration: Duration(seconds: 1)),
+                  ),
+                  SizedBox(height: 16),
                   Text(
-                    "kg Rescued",
-                    style: TextStyle(fontSize: 16),
+                    "No Transactions Found",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
-              progressColor: AppColors.primaryColor,
-              backgroundColor: Colors.grey[300] ?? Colors.grey,
-            ),
-            SizedBox(height: 16),
+            );
+          }
 
-            // Donations Made
-            Text(
-              "Donations Made",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text(
-              "$totalDonations",
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-              ),
-            ).animate().fadeIn(duration: Duration(seconds: 1)),
-            SizedBox(height: 16),
+          // Calculate stats
+          final transactions = snapshot.data!.docs;
+          int totalDonations = transactions.length;
+          double totalFoodRescued = totalDonations * 2;
+          double avgFoodPerDonation = totalDonations > 0
+              ? totalFoodRescued / totalDonations
+              : 0.0;
+          double progress = (totalFoodRescued / goalWeight).clamp(0.0, 1.0);
 
-            // Average Food Saved per Donation
-            Text(
-              "Average Food Saved per Donation",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 8),
-            Text(
-              avgFoodPerDonation.toStringAsFixed(2),
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Colors.orange,
-              ),
-            ).animate().fadeIn().scale(duration: Duration(seconds: 1)),
-            SizedBox(height: 24),
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Animated Header
+                ScaleTransition(
+                  scale: _controller,
+                  child: Icon(
+                    Icons.fastfood_rounded,
+                    size: 100,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+                SizedBox(height: 16),
 
-            // Update Button (Example to Demonstrate State Update)
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  // Mock update: Increment rescued food and donations
-                  totalFoodRescued += 100;
-                  totalDonations += 5;
-                });
-              },
-              child: Text("Update Stats"),
+                // Total Food Rescued with Circular Progress Indicator
+                CircularPercentIndicator(
+                  radius: 100.0,
+                  lineWidth: 8.0,
+                  percent: progress,
+                  animation: true,
+                  animationDuration: 1500,
+                  center: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AnimatedBuilder(
+                        animation: _controller,
+                        builder: (context, child) {
+                          return Text(
+                            "${totalFoodRescued.toStringAsFixed(0)}",
+                            style: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primaryColor,
+                            ),
+                          );
+                        },
+                      ),
+                      Text(
+                        "kg Rescued",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                  progressColor: AppColors.primaryColor,
+                  backgroundColor: Colors.grey[300] ?? Colors.grey,
+                ),
+                SizedBox(height: 16),
+
+                // Donations Made
+                FadeTransition(
+                  opacity: _controller,
+                  child: Column(
+                    children: [
+                      Text(
+                        "Donations Made",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 8),
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 500),
+                        child: Text(
+                          "$totalDonations",
+                          key: ValueKey(totalDonations),
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 16),
+
+                // Average Food Saved per Donation
+                Column(
+                  children: [
+                    FadeTransition(
+                      opacity: _controller,
+                      child: Text(
+                        "Average Food Saved per Donation",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    TweenAnimationBuilder<double>(
+                      tween: Tween<double>(
+                          begin: 0.0, end: avgFoodPerDonation), // Smooth update
+                      duration: const Duration(seconds: 1),
+                      builder: (context, value, child) {
+                        return Text(
+                          value.toStringAsFixed(2),
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(height: 24),
+
+                // Animated Button
+                // GestureDetector(
+                //   onTap: () {
+                //     setState(() {
+                //       // Increment mock data for demonstration
+                //       goalWeight += 20;
+                //     });
+                //   },
+                //   child: AnimatedContainer(
+                //     duration: const Duration(milliseconds: 500),
+                //     padding:
+                //         const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                //     decoration: BoxDecoration(
+                //       color: AppColors.primaryColor,
+                //       borderRadius: BorderRadius.circular(10),
+                //       boxShadow: [
+                //         BoxShadow(
+                //           color: Colors.black.withOpacity(0.2),
+                //           blurRadius: 8,
+                //           spreadRadius: 2,
+                //         )
+                //       ],
+                //     ),
+                //     child: Text(
+                //       "Update Goal",
+                //       style: TextStyle(color: Colors.white, fontSize: 18),
+                //     ),
+                //   ),
+                // ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

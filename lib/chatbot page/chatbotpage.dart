@@ -59,6 +59,8 @@ class _ChatbotpageState extends State<Chatbotpage> {
       final response = await model.generateContent([Content.text(prompt)]);
       String formattedResponse =
           response.text?.replaceAll('*', '').trim() ?? 'No response';
+          response.text?.replaceAll('#', '').trim() ?? 'No response';
+
 
       setState(() {
         _response = formattedResponse;

@@ -294,7 +294,7 @@ Future<Widget> ProductCard(BuildContext context, product) async {
                     topLeft: Radius.circular(12),
                     topRight: Radius.circular(12)),
                 image: DecorationImage(
-                  image: NetworkImage(product['image']),
+                  image: AssetImage('assets/pizza.png'),
                   fit: BoxFit.cover,
                 ),
               ),
