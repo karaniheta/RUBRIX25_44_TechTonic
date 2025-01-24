@@ -37,125 +37,141 @@ class _UservolunteeringviewState extends State<Uservolunteeringview> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchVolunteeringOpportunities(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-                child: Text('No volunteering opportunities found.'));
-          }
-          final opportunities = snapshot.data!;
-
-          return ListView.builder(
-            itemCount: opportunities.length,
-            itemBuilder: (context, index) {
-              final opportunity = opportunities[index];
-              final opportunityId = opportunity['vid']; // Document ID
-              final foodBankId = opportunity['foodbank_uid']; // FoodBank ID
-
-              return Card(
-                margin: EdgeInsets.all(8.0),
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryColor,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Stack(clipBehavior: Clip.none, children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              opportunity['foodbank_name'],
-                              style: TextStyle(
-                                fontFamily: 'intersB',
-                                color: AppColors.titletext,
-                                fontSize: 18,
-                              ),
+    return Column(
+      children: [
+        Text('Open Volunteering oppurtunites',
+        style: TextStyle(
+          color: AppColors.titletext,
+          fontSize: 20,
+          fontFamily: 'interB'
+        ),),
+        SizedBox(height: 20,),
+        Expanded(
+          child: FutureBuilder<List<Map<String, dynamic>>>(
+              future: fetchVolunteeringOpportunities(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+          
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+          
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(
+                      child: Text('No volunteering opportunities found.'));
+                }
+                final opportunities = snapshot.data!;
+          
+                return ListView.builder(
+                  itemCount: opportunities.length,
+                  itemBuilder: (context, index) {
+                    final opportunity = opportunities[index];
+                    final opportunityId = opportunity['vid']; // Document ID
+                    final foodBankId = opportunity['foodbank_uid']; // FoodBank ID
+          
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: Card(
+                        margin: EdgeInsets.all(8.0),
+                        child: Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Stack(clipBehavior: Clip.none, children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      opportunity['foodbank_name'],
+                                      style: TextStyle(
+                                        fontFamily: 'intersB',
+                                        color: AppColors.titletext,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    FilledButton(
+                                      style: ButtonStyle(
+                                        backgroundColor: WidgetStatePropertyAll(AppColors.selectedtile)
+                                      ),
+                                      onPressed: () => optInToOpportunity(
+                                        foodBankId,
+                                        opportunityId, // Pass opportunity ID
+                                        opportunity['title'],
+                                        opportunity['description'],
+                                      ),
+                                      child: Text(
+                                        'Commit',
+                                        style: TextStyle(
+                                          fontFamily: 'intersB',
+                                          fontSize: 14,
+                                          color: AppColors.navbarcolorbg,
+                                         
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  opportunity['title'],
+                                  style: TextStyle(
+                                    fontFamily: 'intersR',
+                                    color: AppColors.titletext,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  '${opportunity['description']}',
+                                  style: TextStyle(
+                                    color: AppColors.titletext,
+                                    fontSize: 12,
+                                    fontFamily: 'interR',
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                              ],
                             ),
-                            Spacer(),
-                            FilledButton(
-                              style: ButtonStyle(
-                                backgroundColor: WidgetStatePropertyAll(AppColors.selectedtile)
-                              ),
-                              onPressed: () => optInToOpportunity(
-                                foodBankId,
-                                opportunityId, // Pass opportunity ID
-                                opportunity['title'],
-                                opportunity['description'],
-                              ),
-                              child: Text(
-                                'Commit',
-                                style: TextStyle(
-                                  fontFamily: 'intersB',
-                                  fontSize: 14,
-                                  color: AppColors.navbarcolorbg,
-                                 
+                            Positioned(
+                              bottom: -20,
+                              right: 10,
+                              child: Container(
+                                padding: EdgeInsets.fromLTRB(7, 5, 7, 5),
+                                decoration: BoxDecoration(
+                                  color: AppColors.selectedtile,
+                                  border: Border.all(
+                                    width: 4,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  'Vacancies : ${opportunity['vacancies'].toString()}',
+                                  style: TextStyle(
+                                    fontFamily: 'interR',
+                                    color: AppColors.navbarcolorbg,
+                                    fontSize: 14,
+                                  ),
                                 ),
                               ),
-                            )
-                          ],
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          opportunity['title'],
-                          style: TextStyle(
-                            fontFamily: 'intersR',
-                            color: AppColors.titletext,
-                            fontSize: 16,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          '${opportunity['description']}',
-                          style: TextStyle(
-                            color: AppColors.titletext,
-                            fontSize: 12,
-                            fontFamily: 'interR',
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                      ],
-                    ),
-                    Positioned(
-                      bottom: -20,
-                      right: 10,
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(7, 5, 7, 5),
-                        decoration: BoxDecoration(
-                          color: AppColors.selectedtile,
-                          border: Border.all(
-                            width: 4,
-                            color: AppColors.primaryColor,
-                          ),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          'Vacancies : ${opportunity['vacancies'].toString()}',
-                          style: TextStyle(
-                            fontFamily: 'interR',
-                            color: AppColors.navbarcolorbg,
-                            fontSize: 14,
-                          ),
+                            ),
+                          ]),
                         ),
                       ),
-                    ),
-                  ]),
-                ),
-              );
-            },
-          );
-        });
+                    );
+                  },
+                );
+              }),
+        ),
+      ],
+    );
   }
 
   void optInToOpportunity(String foodBankId, String opportunityId, String title,

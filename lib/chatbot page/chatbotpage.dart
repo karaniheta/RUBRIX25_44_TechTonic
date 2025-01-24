@@ -84,9 +84,9 @@ class _ChatbotpageState extends State<Chatbotpage> {
             // Display the customization container
             Container(
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 204, 242, 244),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppColors.titletext)
+                //color: const Color.fromARGB(255, 204, 242, 244),
+                //borderRadius: BorderRadius.circular(20),
+                //border: Border.all(color: AppColors.titletext)
               ),
               padding: const EdgeInsets.all(16.0),
               child: Column(

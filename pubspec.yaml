@@ -50,6 +50,9 @@ dependencies:
   lottie: ^2.2.0
   fl_chart: ^0.50.1
   flutter_animate: ^3.0.0
+  geocoding: ^3.0.0
+  geolocator: ^13.0.2
+  async: ^2.11.0
 
 dev_dependencies:
   flutter_test:

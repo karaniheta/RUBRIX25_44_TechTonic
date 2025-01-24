@@ -303,8 +303,8 @@ class _GuidelinespageState extends State<Guidelinespage> {
                   fontSize: 22
                 ),),
                 
-              )
-            
+              ),
+            SizedBox(height: 30,)
           ],
           
         ),

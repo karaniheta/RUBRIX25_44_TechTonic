@@ -106,7 +106,7 @@ class _AccountState extends State<Account> {
         ),
         CircleAvatar(
           radius: 50,
-          backgroundColor: AppColors.primaryColor,
+          backgroundColor: AppColors.titletext,
           child: Icon(
             SuperIcons.is_profile_2user_bold,
             color: AppColors.secondaryColor,
@@ -121,11 +121,10 @@ class _AccountState extends State<Account> {
             padding: EdgeInsets.all(16),
             width: 400,
             decoration: BoxDecoration(
-                color: AppColors.primaryColor,
                 border: Border.all(
-                  color: AppColors.titletext,
-                  width: 2
+                  color: AppColors.titletext
                 ),
+                
                 borderRadius: BorderRadius.circular(12.0)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,7 +134,7 @@ class _AccountState extends State<Account> {
                   style: TextStyle(
                       fontFamily: 'intersB',
                       fontSize: 23,
-                      color: AppColors.secondaryColor),
+                      color: AppColors.titletext),
                 ),
                 SizedBox(
                   height: 10,
@@ -146,7 +145,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: 'User Name\n', // Label
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // Label color
+                          color: AppColors.titletext, // Label color
                           fontSize: 18,
                           fontFamily: 'intersB',
                         ),
@@ -154,7 +153,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: '${data['user_name']}', // User Name
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // User name color
+                          color: AppColors.titletext, // User name color
                           fontSize: 16,
                           fontFamily: 'interR',
                         ),
@@ -171,7 +170,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: 'Email\n', // Label
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // Label color
+                          color: AppColors.titletext, // Label color
                           fontSize: 18,
                           fontFamily: 'intersB',
                         ),
@@ -179,7 +178,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: '${data['user_emailId']}', // User Name
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // User name color
+                          color: AppColors.titletext, // User name color
                           fontSize: 16,
                           fontFamily: 'interR',
                         ),
@@ -196,7 +195,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: 'Date_of_Birth\n', // Label
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // Label color
+                          color: AppColors.titletext, // Label color
                           fontSize: 18,
                           fontFamily: 'intersB',
                         ),
@@ -204,7 +203,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: '${data['dob']}', // User Name
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // User name color
+                          color: AppColors.titletext, // User name color
                           fontSize: 16,
                           fontFamily: 'interR',
                         ),
@@ -221,7 +220,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: 'Account\n', // Label
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // Label color
+                          color: AppColors.titletext, // Label color
                           fontSize: 18,
                           fontFamily: 'intersB',
                         ),
@@ -229,7 +228,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: 'User', // User Name
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // User name color
+                          color: AppColors.titletext, // User name color
                           fontSize: 16,
                           fontFamily: 'interR',
                         ),
@@ -246,7 +245,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: 'Phone\n', // Label
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // Label color
+                          color: AppColors.titletext, // Label color
                           fontSize: 18,
                           fontFamily: 'intersB',
                         ),
@@ -254,7 +253,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: '${data['user_phoneNumber']}', // User Name
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // User name color
+                          color: AppColors.titletext, // User name color
                           fontSize: 16,
                           fontFamily: 'interR',
                         ),
@@ -271,7 +270,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: 'Points\n', // Label
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // Label color
+                          color: AppColors.titletext, // Label color
                           fontSize: 18,
                           fontFamily: 'intersB',
                         ),
@@ -279,7 +278,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: '${data['points']}', // User Name
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // User name color
+                          color: AppColors.titletext, // User name color
                           fontSize: 16,
                           fontFamily: 'interR',
                         ),
@@ -296,7 +295,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: 'Address\n', // Label
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // Label color
+                          color: AppColors.titletext, // Label color
                           fontSize: 18,
                           fontFamily: 'intersB',
                         ),
@@ -304,7 +303,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: '${data['address']}', // User Name
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // User name color
+                          color: AppColors.titletext, // User name color
                           fontSize: 16,
                           fontFamily: 'interR',
                         ),
@@ -329,7 +328,7 @@ class _AccountState extends State<Account> {
         ),
         CircleAvatar(
           radius: 50,
-          backgroundColor: AppColors.primaryColor,
+          backgroundColor: AppColors.titletext,
           child: Icon(
             SuperIcons.is_bank_outline,
             color: AppColors.secondaryColor,
@@ -345,8 +344,8 @@ class _AccountState extends State<Account> {
             width: 400,
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.titletext,
-              width: 2),
-                color: AppColors.primaryColor,
+              width: 1),
+                
                 borderRadius: BorderRadius.circular(12.0)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -356,7 +355,7 @@ class _AccountState extends State<Account> {
                   style: TextStyle(
                       fontFamily: 'intersB',
                       fontSize: 23,
-                      color: AppColors.secondaryColor),
+                      color: AppColors.titletext),
                 ),
                 SizedBox(
                   height: 10,
@@ -367,7 +366,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: 'FoodBank Name\n', // Label
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // Label color
+                          color: AppColors.titletext, // Label color
                           fontSize: 18,
                           fontFamily: 'intersB',
                         ),
@@ -375,7 +374,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: '${data['foodbank_name']}', // User Name
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // User name color
+                          color: AppColors.titletext, // User name color
                           fontSize: 16,
                           fontFamily: 'interR',
                         ),
@@ -392,7 +391,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: 'Email\n', // Label
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // Label color
+                          color: AppColors.titletext, // Label color
                           fontSize: 18,
                           fontFamily: 'intersB',
                         ),
@@ -400,7 +399,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: '${data['foodbank_mail']}', // User Name
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // User name color
+                          color: AppColors.titletext, // User name color
                           fontSize: 16,
                           fontFamily: 'interR',
                         ),
@@ -417,7 +416,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: 'Phone\n', // Label
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // Label color
+                          color: AppColors.titletext, // Label color
                           fontSize: 18,
                           fontFamily: 'intersB',
                         ),
@@ -425,7 +424,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: '${data['foodbank_phoneNumber']}', // User Name
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // User name color
+                          color: AppColors.titletext, // User name color
                           fontSize: 16,
                           fontFamily: 'interR',
                         ),
@@ -442,7 +441,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: 'Account\n', // Label
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // Label color
+                          color: AppColors.titletext, // Label color
                           fontSize: 18,
                           fontFamily: 'intersB',
                         ),
@@ -450,7 +449,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: 'FoodBank', // User Name
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // User name color
+                          color: AppColors.titletext, // User name color
                           fontSize: 16,
                           fontFamily: 'interR',
                         ),
@@ -467,7 +466,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: 'Address\n', // Label
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // Label color
+                          color: AppColors.titletext, // Label color
                           fontSize: 18,
                           fontFamily: 'intersB',
                         ),
@@ -475,7 +474,7 @@ class _AccountState extends State<Account> {
                       TextSpan(
                         text: '${data['foodbank_address']}', // User Name
                         style: TextStyle(
-                          color: AppColors.secondaryColor, // User name color
+                          color: AppColors.titletext, // User name color
                           fontSize: 16,
                           fontFamily: 'interR',
                         ),
