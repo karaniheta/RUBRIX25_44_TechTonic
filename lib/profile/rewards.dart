@@ -52,7 +52,7 @@ class _RewardPageState extends State<RewardPage> {
 
   Future<void> fetchCouponDetails() async {
     // You can change the 'someCouponId' to the actual coupon document ID you need to fetch.
-    final couponDoc = await FirebaseFirestore.instance.collection('Coupon').doc().get();
+    final couponDoc = await FirebaseFirestore.instance.collection('Coupon').doc('8OSoe58RcrhqG72Nsv6d').get();
 
     if (couponDoc.exists) {
       setState(() {
